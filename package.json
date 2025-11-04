@@ -1,9 +1,21 @@
 {
   "name": "ose-modelos",
-  "packageManager": "yarn@4.1.0",
   "version": "1.0.0",
   "description": "Modelos canónicos para el sistema OSE Aguas - Distrito Pitométrico Inteligente",
   "author": "RIOTEC",
   "license": "Private",
-  "repository": "https://github.com/riotec/ose-modelos"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Riotec-UY/ose-modelos.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  }
 }

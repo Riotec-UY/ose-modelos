@@ -31,7 +31,25 @@ El modelo sigue una arquitectura de **3 capas conceptuales**:
 - `IBalanceHidrico` - Cálculos de balance (entrada - salida)
 - `IAlerta` - Detección de anomalías y fugas
 
-## 📦 Uso
+## 📦 Instalación
+
+### Como dependencia local en otros proyectos
+
+```bash
+# Desde GitHub (privado)
+npm install git+ssh://git@github.com/Riotec-UY/ose-modelos.git
+
+# O desde el directorio local durante desarrollo
+npm install ../ose-modelos
+```
+
+### Actualizar a la última versión
+
+```bash
+npm update ose-modelos
+```
+
+## 💻 Uso
 
 ```typescript
 import {
