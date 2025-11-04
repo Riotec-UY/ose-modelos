@@ -83,14 +83,39 @@ Los archivos `.doc.md` están **co-ubicados** con los archivos `.ts` correspondi
 - ⚙️ Reglas de negocio
 - 👥 Quién la usa y cómo
 
-**Ejemplos disponibles:**
-- [`punto-medicion.doc.md`](src/interfaces/infraestructura/punto-medicion.doc.md) - Qué son los puntos de medición
-- [`configuracion-lectura-punto.doc.md`](src/interfaces/infraestructura/configuracion-lectura-punto.doc.md) - Configuración de lecturas esperadas
-- [`relacion-topologica.doc.md`](src/interfaces/infraestructura/relacion-topologica.doc.md) - Relaciones hidráulicas entre puntos
-- [`configuracion-integracion-punto.doc.md`](src/interfaces/datos/configuracion-integracion-punto.doc.md) - Integración con sistemas externos
+**Índice Completo de Documentación:**
+
+#### 📂 Organización
+- [`cliente.doc.md`](src/interfaces/organizacion/cliente.doc.md) - Multi-tenant raíz (OSE Uruguay)
+- [`division.doc.md`](src/interfaces/organizacion/division.doc.md) - UGD Maldonado y estructura operacional
+- [`jefatura.doc.md`](src/interfaces/organizacion/jefatura.doc.md) - Centros operativos locales
+- [`distrito.doc.md`](src/interfaces/organizacion/distrito.doc.md) - Distritos pitométricos (balance hídrico)
+
+#### 🏗️ Infraestructura
+- [`punto-medicion.doc.md`](src/interfaces/infraestructura/punto-medicion.doc.md) - Lugares de medición (13 tipos)
+- [`ubicacion-geografica.doc.md`](src/interfaces/infraestructura/ubicacion-geografica.doc.md) - Posición geográfica y direcciones
+- [`configuracion-lectura-punto.doc.md`](src/interfaces/infraestructura/configuracion-lectura-punto.doc.md) - Qué lecturas debe tener cada punto
+- [`relacion-topologica.doc.md`](src/interfaces/infraestructura/relacion-topologica.doc.md) - Topología de red hidráulica
+
+#### 💾 Datos e Integración
+- [`lectura.doc.md`](src/interfaces/datos/lectura.doc.md) - Lecturas de sensores (discriminated unions explicado)
+- [`fuente-datos.doc.md`](src/interfaces/datos/fuente-datos.doc.md) - Sistemas externos (ATLAS, Zeus SCADA)
+- [`referencia-externa.doc.md`](src/interfaces/datos/referencia-externa.doc.md) - Mapeo de IDs externos
+- [`configuracion-integracion-punto.doc.md`](src/interfaces/datos/configuracion-integracion-punto.doc.md) - Sincronización desde sistemas externos
+
+#### 📊 Análisis
+- [`balance-hidrico.doc.md`](src/interfaces/analisis/balance-hidrico.doc.md) - Cálculo de balance (entrada - salida)
+- [`anomalia.doc.md`](src/interfaces/analisis/anomalia.doc.md) - Detección de fugas y anomalías
+- [`serie-temporal.doc.md`](src/interfaces/analisis/serie-temporal.doc.md) - Series temporales para análisis
+
+#### 🔧 Auxiliares
+- [`coordenadas.doc.md`](src/interfaces/auxiliares/coordenadas.doc.md) - Puntos geográficos (lat/lng)
+- [`metadatos.doc.md`](src/interfaces/auxiliares/metadatos.doc.md) - Metadatos de origen, auditoría y técnicos
+- [`queryParams.doc.md`](src/interfaces/auxiliares/queryParams.doc.md) - Parámetros de consulta para APIs
+- [`responses.doc.md`](src/interfaces/auxiliares/responses.doc.md) - Formatos estándar de respuestas HTTP
 
 **Navegación:**
-Puedes leer estos archivos directamente en GitHub o en tu editor preferido. Están escritos en Markdown estándar.
+Puedes leer estos archivos directamente en GitHub o en tu editor preferido. Están escritos en Markdown estándar y contienen ejemplos reales del proyecto OSE Maldonado.
 
 ### Generar Documentación Consolidada (Opcional)
 
