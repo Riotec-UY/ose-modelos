@@ -228,32 +228,3 @@ export interface IGeoJSONMultiPolygon {
    */
   coordinates: number[][][][];
 }
-
-/**
- * Helper: Crear un Point GeoJSON desde lat/lng
- *
- * **CUIDADO**: Invierte el orden (latitud, longitud) → [longitud, latitud]
- */
-export const crearGeoJSONPoint = (latitud: number, longitud: number, altitud?: number): IGeoJSONPoint => {
-  const coordinates: [number, number] | [number, number, number] = altitud !== undefined
-    ? [longitud, latitud, altitud]
-    : [longitud, latitud];
-
-  return {
-    type: "Point",
-    coordinates
-  };
-};
-
-/**
- * Helper: Extraer lat/lng de un Point GeoJSON
- *
- * **CUIDADO**: Invierte el orden [longitud, latitud] → { latitud, longitud }
- */
-export const extraerLatLngDePoint = (point: IGeoJSONPoint): { latitud: number; longitud: number; altitud?: number } => {
-  return {
-    longitud: point.coordinates[0],
-    latitud: point.coordinates[1],
-    altitud: point.coordinates[2]
-  };
-};

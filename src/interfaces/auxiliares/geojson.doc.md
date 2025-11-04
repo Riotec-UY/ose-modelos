@@ -196,26 +196,42 @@ db.puntosMedicion.find({
 
 ---
 
-## 🔄 Helpers de Conversión
+## 🔄 Conversión lat/lng ↔ GeoJSON
 
-### lat/lng → GeoJSON Point
+### ICoordenadas → IGeoJSONPoint
 
 ```typescript
-import { crearGeoJSONPoint } from 'ose-modelos';
+import { ICoordenadas, IGeoJSONPoint } from 'ose-modelos';
 
-const punto = crearGeoJSONPoint(-34.9167, -54.9333);
-// Resultado: { type: "Point", coordinates: [-54.9333, -34.9167] }
-//                                           ^^^^^^^^  ^^^^^^^^
-//                                           lng       lat (invertido)
+const coords: ICoordenadas = {
+  latitud: -34.9167,
+  longitud: -54.9333
+};
+
+// Conversión manual (invertir orden)
+const punto: IGeoJSONPoint = {
+  type: "Point",
+  coordinates: [coords.longitud, coords.latitud]  // ⚠️ lng primero!
+  //            ^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^
+  //            [0] = lng         [1] = lat
+};
 ```
 
-### GeoJSON Point → lat/lng
+### IGeoJSONPoint → ICoordenadas
 
 ```typescript
-import { extraerLatLngDePoint } from 'ose-modelos';
+import { IGeoJSONPoint, ICoordenadas } from 'ose-modelos';
 
-const coordenadas = extraerLatLngDePoint(punto);
-// Resultado: { latitud: -34.9167, longitud: -54.9333 }
+const punto: IGeoJSONPoint = {
+  type: "Point",
+  coordinates: [-54.9333, -34.9167]
+};
+
+// Extracción manual (invertir orden)
+const coords: ICoordenadas = {
+  longitud: punto.coordinates[0],  // [lng, lat]
+  latitud: punto.coordinates[1]
+};
 ```
 
 ---

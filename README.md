@@ -173,7 +173,6 @@ src/
   - ✅ **IUbicacionGeografica**: `geojson` ahora es campo principal (requerido)
   - ✅ **IDistrito**: `frontera` simplificada a `IGeoJSON` (más limpio)
   - ✅ **ICoordenadas**: Mantenida para compatibilidad (opcional/deprecated)
-  - ✅ **Helpers**: `crearGeoJSONPoint`, `extraerLatLngDePoint`
   - ✅ **MongoDB**: Compatible con queries espaciales ($geoNear, $geoWithin)
   - ✅ **Compatibilidad IRIX**: Modelo probado en producción
   - Patrón adaptado desde IRIX gestion-modelos

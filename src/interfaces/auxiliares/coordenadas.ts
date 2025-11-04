@@ -13,7 +13,6 @@
  * lectura/escritura simple sin queries espaciales.
  *
  * @see IGeoJSONPoint para el formato GeoJSON equivalente
- * @see crearGeoJSONPoint para convertir ICoordenadas → IGeoJSONPoint
  */
 export interface ICoordenadas {
   /** Latitud (Norte-Sur): -90 a +90 */
