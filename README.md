@@ -23,11 +23,14 @@ El modelo sigue una arquitectura de **3 capas conceptuales**:
 ### 2. Contexto Infraestructura Física
 - `IPuntoMedicion` - **Lugar** de medición (residencial, booster, perforación, etc.)
 - `IUbicacionGeografica` - Coordenadas y referencias espaciales
+- `IConfiguracionLecturaPunto` - Define qué lecturas debe tener cada punto
+- `IRelacionTopologica` - Relaciones hidráulicas entre puntos (alimenta_a, controla, etc.)
 
 ### 3. Contexto Datos y Análisis
 - `ILectura` - Lecturas de sensores (discriminated unions por tipo)
 - `IFuenteDatos` - Fuentes externas (ATLAS, Zeus, etc.)
 - `IReferenciaExterna` - Mapeo de IDs externos → entidades canónicas
+- `IConfiguracionIntegracionPunto` - Configuración de sincronización por punto desde sistemas externos
 - `IBalanceHidrico` - Cálculos de balance (entrada - salida)
 - `IAlerta` - Detección de anomalías y fugas
 
@@ -83,18 +86,24 @@ src/
 ├── interfaces/
 │   ├── auxiliares/        # Tipos auxiliares (coordenadas, queries, responses)
 │   ├── organizacion/      # Cliente, División, Jefatura, Distrito
-│   ├── infraestructura/   # PuntoMedicion, UbicacionGeografica
-│   ├── datos/             # Lectura, FuenteDatos, ReferenciaExterna
+│   ├── infraestructura/   # PuntoMedicion, UbicacionGeografica, ConfiguracionLecturaPunto, RelacionTopologica
+│   ├── datos/             # Lectura, FuenteDatos, ReferenciaExterna, ConfiguracionIntegracionPunto
 │   └── analisis/          # BalanceHidrico, Alertas, Reportes
 └── index.ts               # Export central
 ```
 
 ## 🚀 Versionamiento
 
-**Versión actual:** 1.0.0
+**Versión actual:** 1.1.0
 **Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025)
 
 ### Historial
+- **1.1.0** - Extensión operativa: Configuración y topología de red
+  - Agregado `IConfiguracionLecturaPunto`: Define qué lecturas esperar por punto
+  - Agregado `IRelacionTopologica`: Modela relaciones hidráulicas entre puntos
+  - Agregado `IConfiguracionIntegracionPunto`: Configura sincronización por punto desde sistemas externos
+  - Soporte completo para operatoria del sistema: asignación de variables y topología de red
+
 - **1.0.0** - Implementación inicial del modelo conceptual v3.3
   - Estructura organizacional multi-tenant
   - PuntoMedicion como LUGAR (consolidado)

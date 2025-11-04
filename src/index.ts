@@ -3,7 +3,7 @@
  *
  * Modelo canónico para el sistema de Distrito Pitométrico Inteligente OSE Maldonado.
  *
- * Versión: 1.0.0
+ * Versión: 1.1.0
  * Base: MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025)
  */
 
