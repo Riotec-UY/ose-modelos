@@ -1,4 +1,4 @@
-import { ICoordenadas, IMetadatosAuditoria } from '../auxiliares';
+import { ICoordenadas, IGeoJSON, IMetadatosAuditoria } from '../auxiliares';
 
 /**
  * Distrito Pitométrico - Zona de balance hídrico
@@ -9,9 +9,13 @@ import { ICoordenadas, IMetadatosAuditoria } from '../auxiliares';
  * Características:
  * - Pertenece a una Jefatura
  * - Contiene múltiples PuntoMedicion
- * - Tiene frontera geográfica definida (polígono o lista de puntos)
+ * - Tiene frontera geográfica definida como Polygon o Circle (GeoJSON)
  * - Punto único de entrada de agua (generalmente)
  * - Permite calcular: Entrada - Salida = Pérdidas
+ *
+ * **Frontera GeoJSON**:
+ * - Polygon: Distrito con forma irregular (más común)
+ * - Circle: Distrito circular (más simple, área de cobertura)
  */
 export interface IDistrito {
   _id?: string;
@@ -21,14 +25,40 @@ export interface IDistrito {
   descripcion?: string;               // Descripción del distrito
   activo?: boolean;                   // Estado operacional
 
-  // Delimitación geográfica
-  frontera?: {
-    tipo: 'polygon' | 'circle' | 'points'; // Tipo de delimitación
-    coordenadas?: ICoordenadas[];          // Puntos del polígono o lista de ubicaciones
-    centro?: ICoordenadas;                 // Centro geográfico (para círculos)
-    radio?: number;                        // Radio en metros (si tipo: 'circle')
-    geojson?: Record<string, any>;         // GeoJSON completo (opcional)
-  };
+  /**
+   * Delimitación geográfica del distrito (GeoJSON)
+   *
+   * Tipos típicos:
+   * - IGeoJSONPolygon: Distrito con frontera irregular (más común)
+   * - IGeoJSONCircle: Distrito circular (área de cobertura simple)
+   *
+   * El polígono define la zona de balance hídrico donde:
+   * - Se contabilizan todos los puntos de entrada (boosters, perforaciones)
+   * - Se contabilizan todos los puntos de salida (consumo residencial)
+   * - Se calcula: Balance = Entrada - Salida
+   *
+   * @example Distrito con polígono
+   * {
+   *   type: "Polygon",
+   *   coordinates: [
+   *     [
+   *       [-54.9300, -34.9100],
+   *       [-54.9400, -34.9100],
+   *       [-54.9400, -34.9200],
+   *       [-54.9300, -34.9200],
+   *       [-54.9300, -34.9100]  // Cierre
+   *     ]
+   *   ]
+   * }
+   *
+   * @example Distrito circular
+   * {
+   *   type: "Point",
+   *   coordinates: [-54.9350, -34.9150],
+   *   radius: 500  // 500 metros
+   * }
+   */
+  frontera?: IGeoJSON;
 
   // Características operacionales
   poblacion?: number;                 // Población servida

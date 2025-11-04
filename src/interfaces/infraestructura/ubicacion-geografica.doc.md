@@ -2,13 +2,25 @@
 
 **Entidad:** `IUbicacionGeografica`
 **Contexto:** Infraestructura
-**Versión:** 1.0.0
+**Versión:** 2.0.0 (GeoJSON-first)
 
 ---
 
 ## 🎯 ¿Qué es?
 
-Representa la **posición geográfica** de un punto de medición, distrito o cualquier elemento de infraestructura. Incluye coordenadas, dirección postal y referencias espaciales.
+Representa la **posición geográfica** de un punto de medición, distrito o cualquier elemento de infraestructura.
+
+**Modelo híbrido GeoJSON + metadatos**:
+- **GeoJSON**: Geometría estándar (Point, Polygon, etc.) - **PRINCIPAL** ⭐
+- **Metadatos**: Dirección postal, ciudad, referencias humanas
+
+**¿Por qué GeoJSON?**
+- ✅ Queries espaciales en MongoDB ($geoNear, $geoWithin)
+- ✅ Estándar de industria (RFC 7946)
+- ✅ Compatible con mapas (Google Maps, OpenStreetMap)
+- ✅ Soporta puntos, polígonos, líneas, círculos
+
+**Ver:** [`geojson.doc.md`](../auxiliares/geojson.doc.md) para detalles del formato
 
 ---
 
@@ -16,49 +28,104 @@ Representa la **posición geográfica** de un punto de medición, distrito o cua
 
 | Campo | Qué representa | Ejemplo |
 |-------|----------------|---------|
-| `coordenadas` | Latitud y longitud (WGS84) | {lat: -34.6500, lng: -54.7200} |
+| `geojson` ⭐ | **Geometría GeoJSON (PRINCIPAL)** | `{ type: "Point", coordinates: [-54.7200, -34.6500] }` |
+| `coordenadas` | Coordenadas simples (opcional) | `{ latitud: -34.6500, longitud: -54.7200 }` |
 | `direccionPostal` | Dirección física | "Ruta 12 km 5, Pueblo Edén" |
 | `ciudad` | Ciudad/localidad | "Pueblo Edén" |
 | `departamento` | Departamento | "Maldonado" |
 | `barrio` | Barrio/zona (opcional) | "Zona Rural Norte" |
 | `codigoPostal` | Código postal (opcional) | "20000" |
-| `wkt` | Geometría en formato WKT (opcional) | "POINT(-54.7200 -34.6500)" |
-| `geojson` | Geometría en formato GeoJSON (opcional) | {...} |
+| `referenciasAdicionales` | Referencias en terreno | "Frente a la plaza principal, portón verde" |
+| `wkt` | WKT legacy (opcional) | "POINT(-54.7200 -34.6500)" |
 
 ---
 
-## 💡 Ejemplo 1: Perforación Edén
+## 💡 Ejemplo 1: Perforación Edén (GeoJSON)
 
-```yaml
-Ubicación Geográfica:
-  Coordenadas:
-    latitud: -34.6500
-    longitud: -54.7200
-    altitud: 45 metros sobre nivel del mar
+```typescript
+const ubicacionPerforacion: IUbicacionGeografica = {
+  // ⭐ Geometría GeoJSON (PRINCIPAL)
+  geojson: {
+    type: "Point",
+    coordinates: [-54.7200, -34.6500, 45]  // [lng, lat, altitud]
+  },
 
-  Dirección Postal: "Ruta 12 km 5"
-  Ciudad: "Pueblo Edén"
-  Departamento: "Maldonado"
-  País: "Uruguay"
+  // Metadatos de dirección
+  direccionPostal: "Ruta 12 km 5",
+  ciudad: "Pueblo Edén",
+  departamento: "Maldonado",
+  referenciasAdicionales: "500m al norte de la plaza principal"
+};
+```
 
-  Referencias Adicionales: "500m al norte de la plaza principal"
+**MongoDB Query - Encontrar puntos cercanos:**
+```typescript
+db.puntosMedicion.find({
+  "ubicacion.geojson": {
+    $near: {
+      $geometry: ubicacionPerforacion.geojson,
+      $maxDistance: 1000  // 1km de radio
+    }
+  }
+});
 ```
 
 ---
 
 ## 💡 Ejemplo 2: Medidor Residencial
 
-```yaml
-Ubicación Geográfica:
-  Coordenadas:
-    latitud: -34.6456
-    longitud: -54.7123
+```typescript
+const ubicacionMedidor: IUbicacionGeografica = {
+  // ⭐ GeoJSON Point
+  geojson: {
+    type: "Point",
+    coordinates: [-54.7123, -34.6456]
+  },
 
-  Dirección Postal: "Calle Principal 123"
-  Ciudad: "Pueblo Edén"
-  Departamento: "Maldonado"
-  Barrio: "Centro"
-  Código Postal: "20000"
+  // Dirección completa
+  direccionPostal: "Calle Principal 123",
+  ciudad: "Pueblo Edén",
+  departamento: "Maldonado",
+  barrio: "Centro",
+  codigoPostal: "20000"
+};
+```
+
+---
+
+## 💡 Ejemplo 3: Distrito Pitométrico (Polígono)
+
+```typescript
+const ubicacionDistrito: IUbicacionGeografica = {
+  // ⭐ GeoJSON Polygon (área cerrada)
+  geojson: {
+    type: "Polygon",
+    coordinates: [
+      [  // Anillo exterior
+        [-54.7200, -34.6500],  // Punto 1
+        [-54.7150, -34.6500],  // Punto 2
+        [-54.7150, -34.6550],  // Punto 3
+        [-54.7200, -34.6550],  // Punto 4
+        [-54.7200, -34.6500]   // Cierre (igual a punto 1)
+      ]
+    ]
+  },
+
+  ciudad: "Pueblo Edén",
+  departamento: "Maldonado",
+  referenciasAdicionales: "Distrito Pitométrico Centro"
+};
+```
+
+**MongoDB Query - Puntos dentro del distrito:**
+```typescript
+db.puntosMedicion.find({
+  "ubicacion.geojson": {
+    $geoWithin: {
+      $geometry: ubicacionDistrito.geojson
+    }
+  }
+});
 ```
 
 ---

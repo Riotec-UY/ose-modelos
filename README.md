@@ -116,7 +116,8 @@ Los archivos `.doc.md` están **co-ubicados** con los archivos `.ts` correspondi
 - [`serie-temporal.doc.md`](src/interfaces/analisis/serie-temporal.doc.md) - Series temporales para análisis
 
 #### 🔧 Auxiliares
-- [`coordenadas.doc.md`](src/interfaces/auxiliares/coordenadas.doc.md) - Puntos geográficos (lat/lng)
+- [`geojson.doc.md`](src/interfaces/auxiliares/geojson.doc.md) - Geometrías geográficas GeoJSON (Point, Polygon, Circle) ⭐ NUEVO
+- [`coordenadas.doc.md`](src/interfaces/auxiliares/coordenadas.doc.md) - Puntos geográficos simples (compatibilidad)
 - [`metadatos.doc.md`](src/interfaces/auxiliares/metadatos.doc.md) - Metadatos de origen, auditoría y técnicos
 - [`queryParams.doc.md`](src/interfaces/auxiliares/queryParams.doc.md) - Parámetros de consulta para APIs
 - [`responses.doc.md`](src/interfaces/auxiliares/responses.doc.md) - Formatos estándar de respuestas HTTP
@@ -161,10 +162,23 @@ src/
 
 ## 🚀 Versionamiento
 
-**Versión actual:** 1.3.1
+**Versión actual:** 1.3.2
 **Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025) + Patrón IRIX
 
 ### Historial
+- **1.3.2** - Adopción de GeoJSON estándar para ubicaciones (4 Nov 2025)
+  - **IMPORTANTE**: Cambio en modelo de ubicaciones (retrocompatible)
+  - ✅ **Nuevo módulo**: `geojson.ts` con tipos GeoJSON estándar (RFC 7946)
+  - ✅ **Tipos soportados**: Point, Polygon, Circle, LineString, MultiPolygon
+  - ✅ **IUbicacionGeografica**: `geojson` ahora es campo principal (requerido)
+  - ✅ **IDistrito**: `frontera` simplificada a `IGeoJSON` (más limpio)
+  - ✅ **ICoordenadas**: Mantenida para compatibilidad (opcional/deprecated)
+  - ✅ **Helpers**: `crearGeoJSONPoint`, `extraerLatLngDePoint`
+  - ✅ **MongoDB**: Compatible con queries espaciales ($geoNear, $geoWithin)
+  - ✅ **Compatibilidad IRIX**: Modelo probado en producción
+  - Patrón adaptado desde IRIX gestion-modelos
+  - Documentación completa con ejemplos de MongoDB queries
+
 - **1.3.1** - Refactor nomenclatura: PersonalOperativo → Usuario (4 Nov 2025)
   - **BREAKING CHANGE**: Renombrado de interfaces para mayor claridad
   - ✅ `IPersonalOperativo` → `IUsuario` (nombre más genérico y apropiado)

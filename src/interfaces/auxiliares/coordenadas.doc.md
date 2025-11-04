@@ -2,13 +2,27 @@
 
 **Entidad:** `ICoordenadas`
 **Contexto:** Auxiliares
-**Versión:** 1.0.0
+**Versión:** 2.0.0
 
 ---
 
 ## 🎯 ¿Qué es?
 
-Representa un **punto geográfico** definido por latitud y longitud. Es la forma más simple de representar una ubicación en el espacio.
+Representa un **punto geográfico** definido por latitud y longitud en formato legible.
+
+**⚠️ IMPORTANTE**: Este formato es para **compatibilidad y lectura humana**.
+
+Para almacenamiento en MongoDB y queries espaciales, **usar IGeoJSON** en su lugar.
+
+**Diferencias clave:**
+- `ICoordenadas`: `{ latitud, longitud }` (orden natural)
+- `IGeoJSON`: `[longitud, latitud]` (estándar GeoJSON/MongoDB)
+
+**Cuándo usar cada uno:**
+- ✅ `IGeoJSON`: Para queries espaciales, mapas, nuevas implementaciones
+- ⚠️ `ICoordenadas`: Solo para compatibilidad o lectura simple
+
+**Ver:** [`geojson.doc.md`](geojson.doc.md) para el formato recomendado
 
 ---
 
