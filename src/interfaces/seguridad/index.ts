@@ -1,15 +1,11 @@
-// Personal Operativo (Usuarios)
+// Personal Operativo (Usuarios) - MongoDB optimized
 export * from './personal-operativo';
 
-// Roles
-export * from './rol';
+// Tipos de Roles (NO entidades separadas)
+export * from './tipos-roles';
 
-// Permisos
-export * from './permiso';
-
-// Relaciones
-export * from './rol-permiso';
-export * from './usuario-rol';
+// Tipos de Permisos (NO entidades separadas)
+export * from './tipos-permisos';
 
 // Sesiones
 export * from './sesion';

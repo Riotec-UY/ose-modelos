@@ -34,12 +34,11 @@ El modelo sigue una arquitectura de **4 contextos conceptuales**:
 - `IBalanceHidrico` - Cálculos de balance (entrada - salida)
 - `IAlerta` - Detección de anomalías y fugas
 
-### 4. Contexto Seguridad y Autenticación
-- `IPersonalOperativo` - Usuarios del sistema con acceso operacional
-- `IRol` - Roles del sistema (RBAC - Role-Based Access Control)
-- `IPermiso` - Permisos granulares por recurso + acción
-- `IUsuarioRol` - Asignación de roles a usuarios con alcance organizacional
-- `IRolPermiso` - Asignación de permisos a roles
+### 4. Contexto Seguridad y Autenticación (MongoDB-optimized)
+- `IPersonalOperativo` - Usuarios con permisos embebidos (1 query, NO referencias)
+- `IPermisoUsuario` - Permisos embebidos por contexto organizacional (roles + permisos por módulo)
+- `TipoRol` - Tipos de roles como union type (NO entidad separada)
+- `IPermisosModulos` - Permisos granulares por módulo como objeto embebido
 - `ISesion` - Sesiones activas y gestión de tokens JWT
 
 ## 📦 Instalación
@@ -122,12 +121,8 @@ Los archivos `.doc.md` están **co-ubicados** con los archivos `.ts` correspondi
 - [`queryParams.doc.md`](src/interfaces/auxiliares/queryParams.doc.md) - Parámetros de consulta para APIs
 - [`responses.doc.md`](src/interfaces/auxiliares/responses.doc.md) - Formatos estándar de respuestas HTTP
 
-#### 🔐 Seguridad y Autenticación
-- [`personal-operativo.doc.md`](src/interfaces/seguridad/personal-operativo.doc.md) - Usuarios del sistema (autenticación)
-- [`rol.doc.md`](src/interfaces/seguridad/rol.doc.md) - Roles del sistema (RBAC)
-- [`permiso.doc.md`](src/interfaces/seguridad/permiso.doc.md) - Permisos granulares por recurso + acción
-- [`usuario-rol.doc.md`](src/interfaces/seguridad/usuario-rol.doc.md) - Asignación de roles a usuarios con alcance
-- [`rol-permiso.doc.md`](src/interfaces/seguridad/rol-permiso.doc.md) - Asignación de permisos a roles
+#### 🔐 Seguridad y Autenticación (MongoDB-optimized)
+- [`personal-operativo.doc.md`](src/interfaces/seguridad/personal-operativo.doc.md) - Usuarios con permisos embebidos (modelo MongoDB)
 - [`sesion.doc.md`](src/interfaces/seguridad/sesion.doc.md) - Sesiones activas y tokens JWT
 
 **Navegación:**
@@ -166,20 +161,26 @@ src/
 
 ## 🚀 Versionamiento
 
-**Versión actual:** 1.2.0
-**Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025)
+**Versión actual:** 1.3.0
+**Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025) + Patrón IRIX
 
 ### Historial
-- **1.2.0** - Seguridad y Autenticación (4 Nov 2025)
-  - Agregado contexto completo de **Seguridad y Autenticación**
-  - `IPersonalOperativo`: Usuarios del sistema con niveles de acceso organizacional
-  - `IRol`: Roles basados en RBAC (Role-Based Access Control)
-  - `IPermiso`: Permisos granulares por recurso + acción (27 módulos, 5 acciones)
-  - `IUsuarioRol`: Asignación many-to-many con alcance (global/division/jefatura)
-  - `IRolPermiso`: Asignación many-to-many roles-permisos
-  - `ISesion`: Gestión de sesiones, tokens JWT y refresh tokens
-  - 6 entidades nuevas con documentación completa (.doc.md)
-  - Sistema RBAC completo listo para implementación
+- **1.3.0** - Refactor RBAC a modelo MongoDB-optimized (4 Nov 2025)
+  - **BREAKING CHANGE**: Rediseño completo del sistema de seguridad siguiendo patrón de IRIX
+  - ✅ **Modelo MongoDB-optimized**: Permisos embebidos, NO entidades separadas
+  - ✅ **1 solo query**: Usuario + todos sus permisos en una consulta
+  - ✅ **Eliminadas 4 entidades SQL-oriented**: `IRol`, `IPermiso`, `IUsuarioRol`, `IRolPermiso`
+  - ✅ **Nuevas interfaces**: `IPermisoUsuario` (embebido), `TipoRol` (union type), `IPermisosModulos` (objeto)
+  - ✅ **27 módulos** con permisos granulares por acción (crear, leer, actualizar, eliminar, ejecutar)
+  - ✅ **9 tipos de roles** predefinidos (admin_sistema, gerente_division, operador_basico, etc.)
+  - ✅ **Alcances organizacionales**: global, division, jefatura
+  - ✅ **Helpers**: `PERMISOS_COMPLETOS`, `PERMISOS_SOLO_LECTURA`
+  - Modelo simplificado: 2 entidades en lugar de 6
+  - Documentación actualizada con comparación SQL vs MongoDB
+
+- **1.2.0** - Seguridad y Autenticación SQL-oriented (4 Nov 2025) - **OBSOLETO**
+  - Primera implementación con entidades separadas (enfoque SQL)
+  - Reemplazado completamente en v1.3.0
 
 - **1.1.0** - Extensión operativa: Configuración y topología de red
   - Agregado `IConfiguracionLecturaPunto`: Define qué lecturas esperar por punto
