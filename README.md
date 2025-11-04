@@ -12,7 +12,7 @@ Este paquete contiene las interfaces TypeScript que definen el modelo de datos c
 
 ## 🏗️ Arquitectura
 
-El modelo sigue una arquitectura de **3 capas conceptuales**:
+El modelo sigue una arquitectura de **4 contextos conceptuales**:
 
 ### 1. Contexto Organizacional
 - `ICliente` - Multi-tenant raíz
@@ -33,6 +33,14 @@ El modelo sigue una arquitectura de **3 capas conceptuales**:
 - `IConfiguracionIntegracionPunto` - Configuración de sincronización por punto desde sistemas externos
 - `IBalanceHidrico` - Cálculos de balance (entrada - salida)
 - `IAlerta` - Detección de anomalías y fugas
+
+### 4. Contexto Seguridad y Autenticación
+- `IPersonalOperativo` - Usuarios del sistema con acceso operacional
+- `IRol` - Roles del sistema (RBAC - Role-Based Access Control)
+- `IPermiso` - Permisos granulares por recurso + acción
+- `IUsuarioRol` - Asignación de roles a usuarios con alcance organizacional
+- `IRolPermiso` - Asignación de permisos a roles
+- `ISesion` - Sesiones activas y gestión de tokens JWT
 
 ## 📦 Instalación
 
@@ -114,6 +122,14 @@ Los archivos `.doc.md` están **co-ubicados** con los archivos `.ts` correspondi
 - [`queryParams.doc.md`](src/interfaces/auxiliares/queryParams.doc.md) - Parámetros de consulta para APIs
 - [`responses.doc.md`](src/interfaces/auxiliares/responses.doc.md) - Formatos estándar de respuestas HTTP
 
+#### 🔐 Seguridad y Autenticación
+- [`personal-operativo.doc.md`](src/interfaces/seguridad/personal-operativo.doc.md) - Usuarios del sistema (autenticación)
+- [`rol.doc.md`](src/interfaces/seguridad/rol.doc.md) - Roles del sistema (RBAC)
+- [`permiso.doc.md`](src/interfaces/seguridad/permiso.doc.md) - Permisos granulares por recurso + acción
+- [`usuario-rol.doc.md`](src/interfaces/seguridad/usuario-rol.doc.md) - Asignación de roles a usuarios con alcance
+- [`rol-permiso.doc.md`](src/interfaces/seguridad/rol-permiso.doc.md) - Asignación de permisos a roles
+- [`sesion.doc.md`](src/interfaces/seguridad/sesion.doc.md) - Sesiones activas y tokens JWT
+
 **Navegación:**
 Puedes leer estos archivos directamente en GitHub o en tu editor preferido. Están escritos en Markdown estándar y contienen ejemplos reales del proyecto OSE Maldonado.
 
@@ -143,16 +159,28 @@ src/
 │   ├── organizacion/      # Cliente, División, Jefatura, Distrito
 │   ├── infraestructura/   # PuntoMedicion, UbicacionGeografica, ConfiguracionLecturaPunto, RelacionTopologica
 │   ├── datos/             # Lectura, FuenteDatos, ReferenciaExterna, ConfiguracionIntegracionPunto
-│   └── analisis/          # BalanceHidrico, Alertas, Reportes
+│   ├── analisis/          # BalanceHidrico, Alertas, Reportes
+│   └── seguridad/         # PersonalOperativo, Rol, Permiso, UsuarioRol, RolPermiso, Sesion
 └── index.ts               # Export central
 ```
 
 ## 🚀 Versionamiento
 
-**Versión actual:** 1.1.0
+**Versión actual:** 1.2.0
 **Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025)
 
 ### Historial
+- **1.2.0** - Seguridad y Autenticación (4 Nov 2025)
+  - Agregado contexto completo de **Seguridad y Autenticación**
+  - `IPersonalOperativo`: Usuarios del sistema con niveles de acceso organizacional
+  - `IRol`: Roles basados en RBAC (Role-Based Access Control)
+  - `IPermiso`: Permisos granulares por recurso + acción (27 módulos, 5 acciones)
+  - `IUsuarioRol`: Asignación many-to-many con alcance (global/division/jefatura)
+  - `IRolPermiso`: Asignación many-to-many roles-permisos
+  - `ISesion`: Gestión de sesiones, tokens JWT y refresh tokens
+  - 6 entidades nuevas con documentación completa (.doc.md)
+  - Sistema RBAC completo listo para implementación
+
 - **1.1.0** - Extensión operativa: Configuración y topología de red
   - Agregado `IConfiguracionLecturaPunto`: Define qué lecturas esperar por punto
   - Agregado `IRelacionTopologica`: Modela relaciones hidráulicas entre puntos

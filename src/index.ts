@@ -21,3 +21,6 @@ export * from './interfaces/datos';
 
 // Análisis y reporting
 export * from './interfaces/analisis';
+
+// Seguridad y autenticación
+export * from './interfaces/seguridad';
