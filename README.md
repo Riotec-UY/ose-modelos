@@ -66,6 +66,36 @@ import {
 const tipo: TipoPuntoMedicion = 'residencial';
 ```
 
+## 📖 Documentación del Modelo
+
+### Para Stakeholders No Técnicos
+
+Cada entidad del modelo tiene **dos tipos de documentación**:
+
+1. **Archivo `.ts`** - Definición técnica TypeScript (para desarrolladores)
+2. **Archivo `.doc.md`** - Documentación conceptual en lenguaje accesible (para todos)
+
+Los archivos `.doc.md` están **co-ubicados** con los archivos `.ts` correspondientes y explican:
+- 🎯 Qué es la entidad y para qué sirve
+- 📋 Qué información contiene
+- 💡 Ejemplos reales del proyecto OSE Maldonado
+- 🔗 Cómo se relaciona con otras entidades
+- ⚙️ Reglas de negocio
+- 👥 Quién la usa y cómo
+
+**Ejemplos disponibles:**
+- [`punto-medicion.doc.md`](src/interfaces/infraestructura/punto-medicion.doc.md) - Qué son los puntos de medición
+- [`configuracion-lectura-punto.doc.md`](src/interfaces/infraestructura/configuracion-lectura-punto.doc.md) - Configuración de lecturas esperadas
+- [`relacion-topologica.doc.md`](src/interfaces/infraestructura/relacion-topologica.doc.md) - Relaciones hidráulicas entre puntos
+- [`configuracion-integracion-punto.doc.md`](src/interfaces/datos/configuracion-integracion-punto.doc.md) - Integración con sistemas externos
+
+**Navegación:**
+Puedes leer estos archivos directamente en GitHub o en tu editor preferido. Están escritos en Markdown estándar.
+
+### Generar Documentación Consolidada (Opcional)
+
+Para generar PDFs o documentos consolidados para presentaciones, ver el script opcional en `/scripts/generate-pdf.js` (requiere instalación de dependencias adicionales).
+
 ## 🔧 Restricciones de Diseño
 
 - **Solo interfaces y types**: No hay código ejecutable
