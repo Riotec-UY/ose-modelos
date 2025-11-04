@@ -99,16 +99,14 @@ Los archivos `.doc.md` están **co-ubicados** con los archivos `.ts` correspondi
 - [`distrito.doc.md`](src/interfaces/organizacion/distrito.doc.md) - Distritos pitométricos (balance hídrico)
 
 #### 🏗️ Infraestructura
-- [`punto-medicion.doc.md`](src/interfaces/infraestructura/punto-medicion.doc.md) - Lugares de medición (13 tipos)
+- [`punto-medicion.doc.md`](src/interfaces/infraestructura/punto-medicion.doc.md) - Lugares de medición con configuraciones embebidas ⭐ v2.0
 - [`ubicacion-geografica.doc.md`](src/interfaces/infraestructura/ubicacion-geografica.doc.md) - Posición geográfica y direcciones
-- [`configuracion-lectura-punto.doc.md`](src/interfaces/infraestructura/configuracion-lectura-punto.doc.md) - Qué lecturas debe tener cada punto
 - [`relacion-topologica.doc.md`](src/interfaces/infraestructura/relacion-topologica.doc.md) - Topología de red hidráulica
 
 #### 💾 Datos e Integración
 - [`lectura.doc.md`](src/interfaces/datos/lectura.doc.md) - Lecturas de sensores (discriminated unions explicado)
 - [`fuente-datos.doc.md`](src/interfaces/datos/fuente-datos.doc.md) - Sistemas externos (ATLAS, Zeus SCADA)
 - [`referencia-externa.doc.md`](src/interfaces/datos/referencia-externa.doc.md) - Mapeo de IDs externos
-- [`configuracion-integracion-punto.doc.md`](src/interfaces/datos/configuracion-integracion-punto.doc.md) - Sincronización desde sistemas externos
 
 #### 📊 Análisis
 - [`balance-hidrico.doc.md`](src/interfaces/analisis/balance-hidrico.doc.md) - Cálculo de balance (entrada - salida)
@@ -145,6 +143,7 @@ Para generar PDFs o documentos consolidados para presentaciones, ver el script o
 Ver la documentación completa en:
 - `/doc-ose-aguas/MODELO-CONCEPTUAL.md` - Modelo de dominio v3.3
 - `/LINEAMIENTOS-ARQUITECTURA.md` - Lineamientos técnicos v2.5
+- `/INDICES-MONGODB.md` - Índices MongoDB recomendados v1.0 ⭐ NUEVO
 
 ## 🗂️ Estructura
 
@@ -162,10 +161,22 @@ src/
 
 ## 🚀 Versionamiento
 
-**Versión actual:** 1.3.2
-**Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025) + Patrón IRIX
+**Versión actual:** 1.4.0
+**Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025) + Patrón IRIX MongoDB-optimized
 
 ### Historial
+- **1.4.0** - Configuraciones embebidas en IPuntoMedicion - MongoDB-optimized (4 Nov 2025)
+  - ✅ **Patrón MongoDB-optimized**: Configuraciones embebidas siguiendo patrón IRIX/INSIDE
+  - ✅ **IPuntoMedicion refactorizado**: Ahora incluye `configuracionesLectura[]`, `configuracionIntegracion`, `ultimaLecturaPorTipo`
+  - ✅ **Nuevos tipos embebidos**: `IConfiguracionLectura`, `IConfiguracionIntegracion`, `IResumenUltimaLectura`
+  - ✅ **Eliminados tipos SQL-oriented**: `IConfiguracionLecturaPunto`, `IConfiguracionIntegracionPunto` (eran entidades separadas)
+  - ✅ **1 query en lugar de 4**: Sin $lookup ni aggregations para obtener punto completo
+  - ✅ **Queries simplificados**: Filtrar por fuente con `{'configuracionIntegracion.idFuenteDatos': 'zeus'}`
+  - ✅ **Documento índices**: `INDICES-MONGODB.md` con 14 índices recomendados
+  - ✅ **Documentación**: `punto-medicion.doc.md` v2.0 con ejemplos completos embebidos
+  - Validación: Query "obtener punto completo" ahora 4x más rápido (~1ms vs ~4-20ms)
+
+
 - **1.3.2** - Adopción de GeoJSON estándar para ubicaciones (4 Nov 2025)
   - **IMPORTANTE**: Cambio en modelo de ubicaciones (retrocompatible)
   - ✅ **Nuevo módulo**: `geojson.ts` con tipos GeoJSON estándar (RFC 7946)

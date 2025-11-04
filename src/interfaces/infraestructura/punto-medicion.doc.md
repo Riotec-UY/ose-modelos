@@ -2,7 +2,8 @@
 
 **Entidad:** `IPuntoMedicion`
 **Contexto:** Infraestructura
-**Versión:** 1.0.0
+**Versión:** 2.0.0 (MongoDB-optimized)
+**Última actualización:** 4 Nov 2025
 
 ---
 
@@ -35,6 +36,55 @@ Cada uno de estos lugares es un "Punto de Medición" en el sistema RIOTEC.
 3. **Ubicación geográfica** de cada punto
 4. **Asociación** con lecturas/mediciones que se toman en ese lugar
 5. **Gestión del ciclo de vida** (instalación, operación, mantenimiento, desactivación)
+
+---
+
+## ⚡ Patrón MongoDB-Optimized (v2.0.0)
+
+**IMPORTANTE**: Desde v1.4.0, `IPuntoMedicion` sigue un patrón **MongoDB-optimized** con configuraciones embebidas.
+
+### ¿Qué cambió?
+
+```typescript
+// ❌ ANTES (v1.0 - SQL-oriented): 4 queries
+const punto = await db.puntosMedicion.findById(id);
+const configs = await db.configuracionesLectura.find({ idPuntoMedicion: id });
+const integracion = await db.configuracionesIntegracion.findOne({ idPuntoMedicion: id });
+const lecturas = await db.lecturas.find({ idPuntoMedicion: id }).sort(...).limit(100);
+
+// ✅ AHORA (v2.0 - MongoDB-optimized): 1 query
+const punto = await db.puntosMedicion.findById(id);
+// punto.configuracionesLectura → embebido ⚡
+// punto.configuracionIntegracion → embebido ⚡
+// punto.ultimaLecturaPorTipo → embebido ⚡
+```
+
+### Configuraciones Embebidas
+
+| Campo | Qué contiene | ¿Por qué embebido? |
+|-------|--------------|-------------------|
+| `configuracionesLectura[]` | Qué lecturas esperar, frecuencias, validaciones | Metadata pequeño (~3-5 configs), cambia poco, siempre se consulta junto con el punto |
+| `configuracionIntegracion` | Cómo sincronizar desde Zeus/ATLAS, mapeo de variables | Metadata pequeño (1 config), cambia muy poco, permite filtrar "todos los de Zeus" |
+| `ultimaLecturaPorTipo{}` | Última lectura por cada tipo (acceso ultra-rápido) | Evita query adicional a colección lecturas en el 80% de los casos |
+
+### Ventajas
+
+- ✅ **1 query** en lugar de 4 (4x más rápido)
+- ✅ **Sin $lookup** ni aggregations complejos
+- ✅ **Patrón IRIX/INSIDE**: Probado en producción
+- ✅ **Filtrar por fuente** es más simple: `{ 'configuracionIntegracion.idFuenteDatos': 'fuente-zeus' }`
+
+### Lecturas Históricas (siguen separadas)
+
+```typescript
+// Historial completo en colección separada (correcto)
+const lecturasHistoricas = await db.lecturas.find({
+  idPuntoMedicion: id,
+  'valores.timestamp': { $gte: fechaInicio, $lte: fechaFin }
+});
+```
+
+**Razón**: Lecturas son volumen alto (millones de docs), con TTL automático. Mantener separadas tiene sentido.
 
 ---
 
@@ -80,6 +130,8 @@ Cada punto tiene una función en el cálculo de balance:
 
 ## 📋 Información que contiene
 
+### Datos Básicos
+
 | Campo | Qué representa | Ejemplo |
 |-------|----------------|---------|
 | `nombre` | Nombre descriptivo del punto | "Booster Hospital" |
@@ -87,11 +139,18 @@ Cada punto tiene una función en el cálculo de balance:
 | `tipo` | Tipo de lugar | "booster" |
 | `funcionBalanceHidrico` | Rol en el balance | "control" |
 | `idDistrito` | A qué distrito pertenece | "distrito-eden" |
-| `ubicacion` | Coordenadas geográficas | lat: -34.9, lng: -54.95 |
-| `direccionPostal` | Dirección física | "Ruta 39 km 3" |
+| `ubicacion` | Coordenadas geográficas (GeoJSON) | Point [-54.95, -34.9] |
 | `estado` | Estado operacional | operativo / mantenimiento / error / inactivo |
 | `fechaInstalacion` | Cuándo se instaló | "2024-01-15" |
 | `metadatosTecnicos` | Datos específicos por tipo | Capacidad, fabricante, modelo, etc. |
+
+### Configuraciones Embebidas ⭐ (v2.0)
+
+| Campo | Qué representa | Ejemplo |
+|-------|----------------|---------|
+| `configuracionesLectura[]` | Qué lecturas esperar, frecuencias, validaciones | `[{ tipoLectura: "Macromedidor Caudal", frecuenciaEsperada: 5, obligatoria: true }]` |
+| `configuracionIntegracion` | Cómo sincronizar desde sistemas externos | `{ idFuenteDatos: "fuente-zeus", metodoSincronizacion: "polling", frecuenciaSincronizacion: 5 }` |
+| `ultimaLecturaPorTipo{}` | Última lectura por cada tipo (acceso rápido) | `{ "Macromedidor Caudal": { timestamp: "2025-11-04T10:30:00Z", valor: 45.2, calidadDato: "válida" } }` |
 
 ---
 
@@ -216,14 +275,26 @@ Punto de Medición:
 
 ## 🔗 Se relaciona con
 
+### Entidades Externas (Referencias)
+
 - **División/Jefatura/Distrito** (`IDivision`, `IJefatura`, `IDistrito`): Jerarquía organizacional a la que pertenece
-- **Ubicación Geográfica** (`IUbicacionGeografica`): Dónde está físicamente
-- **Lectura** (`ILectura`): Los valores que se miden en este punto
-- **Configuración de Lectura** (`IConfiguracionLecturaPunto`): Qué lecturas debe tener
-- **Configuración de Integración** (`IConfiguracionIntegracionPunto`): Cómo obtener los datos desde sistemas externos
+- **Fuente de Datos** (`IFuenteDatos`): Sistemas externos desde donde se sincroniza (Zeus, ATLAS, etc.)
+- **Lectura** (`ILectura`): Los valores que se miden en este punto (colección separada, historial completo)
 - **Relación Topológica** (`IRelacionTopologica`): Cómo se conecta con otros puntos
 - **Balance Hídrico** (`IBalanceHidrico`): Participa en los cálculos de entrada/salida
 - **Referencia Externa** (`IReferenciaExterna`): IDs en sistemas externos (ATLAS, Zeus, GIS, etc.)
+
+### Tipos Embebidos (dentro del documento)
+
+- **Ubicación Geográfica** (`IUbicacionGeografica`): Dónde está físicamente (embebido)
+- **Configuraciones de Lectura** (`IConfiguracionLectura[]`): Qué lecturas debe tener (embebido ⭐)
+- **Configuración de Integración** (`IConfiguracionIntegracion`): Cómo sincronizar desde externos (embebido ⭐)
+- **Resumen de Últimas Lecturas** (`Record<TipoLectura, IResumenUltimaLectura>`): Acceso rápido sin query adicional (embebido ⭐)
+
+### ⚠️ Entidades Deprecadas
+
+- ~~`IConfiguracionLecturaPunto`~~ → Usar `configuracionesLectura[]` embebido
+- ~~`IConfiguracionIntegracionPunto`~~ → Usar `configuracionIntegracion` embebido
 
 ---
 
@@ -300,12 +371,13 @@ PuntoMedicion (pm-boost-001)
 ### Operadores OSE
 Registran nuevos puntos cuando instalan infraestructura.
 
-**Caso de uso:** Instalación de nuevo medidor residencial
+**Caso de uso:** Instalación de nuevo medidor residencial (v2.0)
 1. Técnico OSE instala medidor físico en domicilio
-2. Operador crea `PuntoMedicion` en sistema RIOTEC
-3. Configura ubicación, tipo, metadatos técnicos
-4. Crea `ConfiguracionLecturaPunto` para definir lecturas esperadas
-5. Crea `ConfiguracionIntegracionPunto` para sincronizar desde ATLAS
+2. Operador crea `PuntoMedicion` en sistema RIOTEC con **todo embebido**:
+   - Datos básicos: ubicación, tipo, metadatos técnicos
+   - **Configuraciones de lectura embebidas**: Qué lecturas esperar
+   - **Configuración de integración embebida**: Cómo sincronizar desde ATLAS
+3. ✅ **1 sola operación** de creación (antes eran 3 inserts separados)
 
 ### Sistema de Balance Hídrico
 Consulta puntos por función para calcular entrada/salida.
@@ -365,10 +437,16 @@ Visualiza puntos geográficamente con iconos según tipo.
 Para desarrolladores que consuman este modelo:
 
 ```typescript
-import { IPuntoMedicion, TipoPuntoMedicion } from 'ose-modelos';
+import {
+  IPuntoMedicion,
+  TipoPuntoMedicion,
+  IConfiguracionLectura,
+  IConfiguracionIntegracion
+} from 'ose-modelos';
 
-// Crear punto de medición: Booster Hospital
+// ⭐ EJEMPLO v2.0: Crear punto con configuraciones embebidas
 const punto: IPuntoMedicion = {
+  // Datos básicos
   idCliente: "ose-uruguay",
   idDivision: "ugd-maldonado",
   idJefatura: "jef-maldonado-centro",
@@ -381,7 +459,10 @@ const punto: IPuntoMedicion = {
   funcionBalanceHidrico: "control",
 
   ubicacion: {
-    coordenadas: { latitud: -34.9000, longitud: -54.9500 },
+    geojson: {
+      type: "Point",
+      coordinates: [-54.9500, -34.9000]  // [lng, lat] orden GeoJSON
+    },
     direccionPostal: "Ruta 39 km 3, frente al Hospital Regional",
     departamento: "Maldonado"
   },
@@ -395,8 +476,134 @@ const punto: IPuntoMedicion = {
     potenciaInstalada_kW: 45,
     fabricante: "Grundfos",
     modeloBombas: "CR64-3"
+  },
+
+  // ⭐ CONFIGURACIONES EMBEBIDAS (MongoDB-optimized)
+  configuracionesLectura: [
+    {
+      tipoLectura: "Booster Presión Entrada",
+      frecuenciaEsperada: 5,  // minutos
+      obligatoria: true,
+      rangoValido: {
+        minimo: 1.0,
+        maximo: 6.0,
+        unidad: "bar"
+      },
+      activa: true
+    },
+    {
+      tipoLectura: "Booster Presión Salida",
+      frecuenciaEsperada: 5,
+      obligatoria: true,
+      rangoValido: {
+        minimo: 2.0,
+        maximo: 8.0,
+        unidad: "bar"
+      },
+      activa: true
+    },
+    {
+      tipoLectura: "Booster Caudal",
+      frecuenciaEsperada: 5,
+      obligatoria: true,
+      rangoValido: {
+        minimo: 0,
+        maximo: 150,
+        unidad: "m³/h"
+      },
+      activa: true
+    }
+  ],
+
+  configuracionIntegracion: {
+    idFuenteDatos: "fuente-zeus-scada",
+    metodoSincronizacion: "polling",
+    frecuenciaSincronizacion: 5,  // minutos
+
+    mapaVariables: [
+      {
+        variableExterna: "ZEUS-BOOST-HOSP.PressureIn",
+        tipoLecturaDestino: "Booster Presión Entrada",
+        activo: true
+      },
+      {
+        variableExterna: "ZEUS-BOOST-HOSP.PressureOut",
+        tipoLecturaDestino: "Booster Presión Salida",
+        activo: true
+      },
+      {
+        variableExterna: "ZEUS-BOOST-HOSP.Flow",
+        tipoLecturaDestino: "Booster Caudal",
+        activo: true
+      }
+    ],
+
+    configuracionProtocolo: {
+      nodeId: "ns=2;s=Booster.Hospital",
+      browsePath: "/Objects/Boosters/Hospital"
+    },
+
+    estado: "activa",
+    activa: true
+  },
+
+  // ultimaLecturaPorTipo se actualiza automáticamente cuando llegan lecturas
+  ultimaLecturaPorTipo: {
+    "Booster Presión Entrada": {
+      timestamp: "2025-11-04T10:30:00Z",
+      valor: 3.5,
+      calidadDato: "válida"
+    },
+    "Booster Presión Salida": {
+      timestamp: "2025-11-04T10:30:00Z",
+      valor: 5.2,
+      calidadDato: "válida"
+    },
+    "Booster Caudal": {
+      timestamp: "2025-11-04T10:30:00Z",
+      valor: 45.2,
+      calidadDato: "válida"
+    }
   }
 };
+
+// ✅ 1 sola inserción - todo embebido
+await db.puntosMedicion.insertOne(punto);
+
+// ✅ Consulta simple - todo en 1 query
+const puntoCompleto = await db.puntosMedicion.findOne({ _id: punto._id });
+// puntoCompleto.configuracionesLectura → ya está
+// puntoCompleto.configuracionIntegracion → ya está
+// puntoCompleto.ultimaLecturaPorTipo → ya está
 ```
 
-**Ver:** `punto-medicion.ts` para definición técnica completa
+### Queries Comunes
+
+```typescript
+// Filtrar todos los puntos sincronizados desde Zeus
+const puntosZeus = await db.puntosMedicion.find({
+  'configuracionIntegracion.idFuenteDatos': 'fuente-zeus-scada'
+});
+
+// Puntos con sincronización en error
+const puntosError = await db.puntosMedicion.find({
+  'configuracionIntegracion.estado': 'error',
+  'configuracionIntegracion.contadorErroresConsecutivos': { $gte: 3 }
+});
+
+// Puntos que deberían tener presión
+const puntosConPresion = await db.puntosMedicion.find({
+  'configuracionesLectura': {
+    $elemMatch: {
+      tipoLectura: { $regex: 'Presión' },
+      obligatoria: true
+    }
+  }
+});
+```
+
+**Ver:**
+- `punto-medicion.ts` para definición técnica completa
+- `INDICES-MONGODB.md` para índices recomendados
+- `configuracion-lectura-punto.ts` (deprecated) - usar configuraciones embebidas
+- `configuracion-integracion-punto.ts` (deprecated) - usar configuraciones embebidas

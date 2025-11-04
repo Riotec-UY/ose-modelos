@@ -1,5 +1,6 @@
 import { IMetadatosAuditoria, IMetadatosTecnicos } from '../auxiliares';
 import { IUbicacionGeografica } from './ubicacion-geografica';
+import { TipoLectura, CalidadDato } from '../datos/lectura';
 
 /**
  * Tipos de Punto de Medición
@@ -89,6 +90,194 @@ export type EstadoPuntoMedicion =
   | 'error'          // Con fallas técnicas
   | 'inactivo';      // Desactivado permanentemente
 
+// ==========================================
+// CONFIGURACIONES EMBEBIDAS
+// ==========================================
+
+/**
+ * Configuración de lectura embebida en punto de medición
+ *
+ * Define qué tipo de lectura se espera, con qué frecuencia y validaciones.
+ * Se embebe directamente en IPuntoMedicion (sin _id ni referencias redundantes).
+ */
+export interface IConfiguracionLectura {
+  /** Tipo de lectura esperada */
+  tipoLectura: TipoLectura;
+
+  /** Frecuencia esperada en minutos entre lecturas */
+  frecuenciaEsperada: number;
+
+  /** Si es true, genera alerta cuando falta */
+  obligatoria: boolean;
+
+  /** Rango de valores válidos (opcional) */
+  rangoValido?: {
+    minimo?: number;
+    maximo?: number;
+    unidad: string;
+  };
+
+  /** Tolerancia en minutos antes de alertar (default: 2x frecuencia) */
+  toleranciaRetraso?: number;
+
+  /** Calidad mínima aceptable */
+  umbralCalidadMinima?: CalidadDato;
+
+  /** Estado de la configuración */
+  activa: boolean;
+  fechaActivacion?: string;
+  fechaDesactivacion?: string;
+
+  /** Notas operativas */
+  descripcion?: string;
+  notas?: string;
+}
+
+/**
+ * Métodos de sincronización disponibles
+ */
+export type MetodoSincronizacion =
+  | 'polling'     // Sistema RIOTEC consulta periódicamente
+  | 'push'        // Sistema externo envía datos cuando cambian
+  | 'on_change'   // Sistema externo notifica cambios (webhook/MQTT)
+  | 'manual';     // Sincronización manual/bajo demanda
+
+export const METODOS_SINCRONIZACION: MetodoSincronizacion[] = [
+  'polling',
+  'push',
+  'on_change',
+  'manual',
+];
+
+/**
+ * Estados de una configuración de integración
+ */
+export type EstadoConfiguracionIntegracion =
+  | 'activa'           // Sincronización operativa
+  | 'pausada'          // Pausada temporalmente
+  | 'error'            // Error en última sincronización
+  | 'desactivada';     // Desactivada permanentemente
+
+export const ESTADOS_CONFIGURACION_INTEGRACION: EstadoConfiguracionIntegracion[] = [
+  'activa',
+  'pausada',
+  'error',
+  'desactivada',
+];
+
+/**
+ * Mapeo de una variable externa a un tipo de lectura canónico
+ */
+export interface IMapeoVariable {
+  /** Tag/ID en sistema externo (ej: "ZEUS-BOOST-HOSP.PressureIn") */
+  variableExterna: string;
+
+  /** Tipo en sistema externo (opcional) */
+  tipoVariableExterna?: string;
+
+  /** A qué tipo de lectura canónica mapea */
+  tipoLecturaDestino: TipoLectura;
+
+  /** Expresión o fórmula de conversión (ej: "x * 0.1" para cambiar unidades) */
+  transformacion?: string;
+
+  /** Factor multiplicador simple (alternativa a transformación) */
+  factorConversion?: number;
+
+  /** Descripción del mapeo */
+  descripcion?: string;
+
+  /** Estado del mapeo */
+  activo: boolean;
+}
+
+/**
+ * Configuración de integración embebida en punto de medición
+ *
+ * Define CÓMO sincronizar datos desde sistemas externos (Zeus, ATLAS, etc).
+ * Se embebe directamente en IPuntoMedicion (sin _id ni referencias redundantes).
+ */
+export interface IConfiguracionIntegracion {
+  /** ID de la fuente de datos externa (para filtrar "todos los de Zeus") */
+  idFuenteDatos: string;
+
+  /** Mapeo de variables externas → tipos de lectura canónicos */
+  mapaVariables: IMapeoVariable[];
+
+  /** Método de sincronización */
+  metodoSincronizacion: MetodoSincronizacion;
+
+  /** Frecuencia en minutos (obligatorio si método es 'polling') */
+  frecuenciaSincronizacion?: number;
+
+  /** Configuración específica del protocolo */
+  configuracionProtocolo?: {
+    // Para OPC UA
+    nodeId?: string;
+    browsePath?: string;
+
+    // Para API REST
+    endpoint?: string;
+    metodoHTTP?: 'GET' | 'POST';
+    parametrosQuery?: Record<string, string>;
+
+    // Para MQTT
+    topic?: string;
+
+    // Genérico
+    parametrosAdicionales?: Record<string, any>;
+  };
+
+  /** Estado de la integración */
+  estado: EstadoConfiguracionIntegracion;
+
+  /** Timestamp de última sincronización exitosa */
+  ultimaSincronizacionExitosa?: string;
+
+  /** Timestamp de último intento (exitoso o no) */
+  ultimaSincronizacionIntento?: string;
+
+  /** Timestamp de próxima sincronización programada */
+  proximaSincronizacionProgramada?: string;
+
+  /** Información del último error */
+  ultimoError?: {
+    timestamp: string;
+    mensaje: string;
+    codigo?: string;
+  };
+
+  /** Contador de errores consecutivos */
+  contadorErroresConsecutivos?: number;
+
+  /** Metadatos operativos */
+  descripcion?: string;
+  notas?: string;
+  activa: boolean;
+  fechaActivacion?: string;
+  fechaDesactivacion?: string;
+}
+
+/**
+ * Resumen de última lectura por tipo
+ *
+ * Permite acceso rápido a la última lectura sin consultar la colección de lecturas.
+ * Se actualiza automáticamente cuando llega una nueva lectura.
+ */
+export interface IResumenUltimaLectura {
+  /** Timestamp de la lectura */
+  timestamp: string;
+
+  /** Valor principal (caudal, presión, consumo, etc.) */
+  valor: any;
+
+  /** Calidad del dato */
+  calidadDato: CalidadDato;
+
+  /** Valores secundarios relevantes (opcional) */
+  valoresAdicionales?: Record<string, any>;
+}
+
 /**
  * Punto de Medición - LUGAR físico donde se realizan mediciones
  *
@@ -100,8 +289,15 @@ export type EstadoPuntoMedicion =
  * - Tipo clasificatorio (NO restrictivo)
  * - Función en balance hídrico
  * - Ubicación geográfica
+ * - **Configuraciones embebidas** (qué lecturas esperar, cómo sincronizar) ⭐
+ * - **Resumen de últimas lecturas** (acceso rápido sin consultar colección) ⭐
  * - Metadatos técnicos flexibles (varían según tipo)
  * - Estado operacional
+ *
+ * Patrón MongoDB-optimized:
+ * - Configuraciones embebidas (metadata pequeño, cambia poco)
+ * - Lecturas en colección separada (volumen alto, historial completo)
+ * - Resumen de última lectura embebido (acceso ultra-rápido)
  *
  * Ejemplos:
  * - Domicilio residencial: 1 lugar → 1 lectura de consumo
@@ -131,6 +327,57 @@ export interface IPuntoMedicion {
   fechaInstalacion?: string;       // ISO 8601
   fechaDesactivacion?: string;     // ISO 8601 (si está inactivo)
 
+  // ⭐ CONFIGURACIONES EMBEBIDAS (MongoDB-optimized)
+  /**
+   * Configuraciones de lecturas esperadas
+   *
+   * Define qué tipos de lecturas debe tener este punto, con qué frecuencia,
+   * validaciones y alertas.
+   *
+   * Embebido porque:
+   * - Metadata pequeño (~3-5 configs por punto)
+   * - Cambia poco (solo en instalación o reconfiguración)
+   * - Siempre se consulta junto con el punto
+   */
+  configuracionesLectura: IConfiguracionLectura[];
+
+  /**
+   * Configuración de integración con sistemas externos
+   *
+   * Define CÓMO sincronizar datos desde Zeus, ATLAS, etc.
+   * Incluye mapeo de variables externas → tipos de lectura canónicos.
+   *
+   * Embebido porque:
+   * - Metadata pequeño (~1 config por punto)
+   * - Cambia muy poco
+   * - Permite filtrar fácilmente "todos los puntos de Zeus"
+   */
+  configuracionIntegracion?: IConfiguracionIntegracion;
+
+  /**
+   * Resumen de última lectura por tipo
+   *
+   * Permite acceso ultra-rápido a la última lectura sin consultar
+   * la colección de lecturas (historial completo).
+   *
+   * Se actualiza automáticamente cuando llega una nueva lectura.
+   *
+   * Ejemplo:
+   * {
+   *   "Macromedidor Caudal": {
+   *     timestamp: "2025-11-04T10:30:00Z",
+   *     valor: 45.2,
+   *     calidadDato: "válida"
+   *   },
+   *   "Macromedidor Presión": {
+   *     timestamp: "2025-11-04T10:30:00Z",
+   *     valor: 3.5,
+   *     calidadDato: "válida"
+   *   }
+   * }
+   */
+  ultimaLecturaPorTipo?: Record<TipoLectura, IResumenUltimaLectura>;
+
   // Metadatos técnicos flexibles
   // Varían según tipo de punto (ver ejemplos en documentación)
   metadatosTecnicos?: IMetadatosTecnicos;
@@ -150,14 +397,15 @@ export interface IPuntoMedicion {
  */
 export interface ICreatePuntoMedicion extends Omit<
   Partial<IPuntoMedicion>,
-  '_id' | 'cliente' | 'division' | 'jefatura' | 'distrito'
+  '_id' | 'cliente' | 'division' | 'jefatura' | 'distrito' | 'ultimaLecturaPorTipo'
 > {
-  idCliente: string;                      // Requerido
-  nombre: string;                         // Requerido
-  tipo: TipoPuntoMedicion;                // Requerido
+  idCliente: string;                            // Requerido
+  nombre: string;                               // Requerido
+  tipo: TipoPuntoMedicion;                      // Requerido
   funcionBalanceHidrico: FuncionBalanceHidrico; // Requerido
-  ubicacion: IUbicacionGeografica;        // Requerido
-  estado: EstadoPuntoMedicion;            // Requerido
+  ubicacion: IUbicacionGeografica;              // Requerido
+  estado: EstadoPuntoMedicion;                  // Requerido
+  configuracionesLectura: IConfiguracionLectura[]; // Requerido (puede ser array vacío si aún no se configuró)
 }
 
 /**
