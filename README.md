@@ -107,6 +107,7 @@ Los archivos `.doc.md` están **co-ubicados** con los archivos `.ts` correspondi
 - [`lectura.doc.md`](src/interfaces/datos/lectura.doc.md) - Lecturas de sensores (discriminated unions explicado)
 - [`fuente-datos.doc.md`](src/interfaces/datos/fuente-datos.doc.md) - Sistemas externos (ATLAS, Zeus SCADA)
 - [`referencia-externa.doc.md`](src/interfaces/datos/referencia-externa.doc.md) - Mapeo de IDs externos
+- [`registro-sincronizacion.doc.md`](src/interfaces/datos/registro-sincronizacion.doc.md) - Auditoría de integraciones (crítico para piloto) ⭐ NUEVO v1.6
 
 #### 📊 Análisis
 - [`balance-hidrico.doc.md`](src/interfaces/analisis/balance-hidrico.doc.md) - Cálculo de balance (entrada - salida)
@@ -162,10 +163,24 @@ src/
 
 ## 🚀 Versionamiento
 
-**Versión actual:** 1.5.0
-**Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025) + Patrón GAS/INSIDE auditorías
+**Versión actual:** 1.6.0
+**Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025) + Capa de Integración completa
 
 ### Historial
+- **1.6.0** - Capa de Integración - Monitoreo y configuración de integraciones (4 Nov 2025)
+  - ✅ **Nueva entidad**: `IRegistroSincronizacion` - Auditoría operacional de integraciones ⭐ CRÍTICO
+  - ✅ **Nueva entidad**: `ISistemaExterno` - Catálogo de productos/sistemas (ATLAS, Zeus, etc.)
+  - ✅ **Nueva entidad**: `IReglaMapeo` - Configuración declarativa de transformaciones
+  - ✅ **Documentación extensa**: `registro-sincronizacion.doc.md` con 5 casos de uso detallados
+  - ✅ **Dashboard de monitoreo**: Queries y alertas para salud de integraciones
+  - ✅ **Debugging operacional**: Trazabilidad completa de cada sincronización
+  - ✅ **Métricas de SLA**: Tasa de éxito, duración, calidad de datos
+  - ✅ **Sistema de alertas**: 5 reglas automáticas de detección de problemas
+  - ✅ **Índices MongoDB**: 6 índices optimizados para queries de monitoreo
+  - ✅ **TTL support**: Retención configurable (default 6 meses)
+  - Beneficios: Visibilidad completa de ATLAS y Zeus, detección temprana de fallos
+  - Esencial para piloto OSE Maldonado (debugging de integraciones en tiempo real)
+
 - **1.5.0** - Sistema de auditorías completo - Patrón GAS/INSIDE (4 Nov 2025)
   - ✅ **Patrón GAS/INSIDE**: Auditorías con snapshots inmutables en colección separada
   - ✅ **Nueva entidad**: `IAuditoria` - Trazabilidad completa de todos los cambios
