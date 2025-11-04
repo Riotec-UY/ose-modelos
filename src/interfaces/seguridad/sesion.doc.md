@@ -283,7 +283,7 @@ Resultado:
 
 ## 🔗 Se relaciona con
 
-- **PersonalOperativo**: Usuario de la sesión
+- **Usuario** (`IUsuario`): Usuario de la sesión
 - **Cliente**: Contexto organizacional
 - **División**: Contexto organizacional (opcional)
 - **Jefatura**: Contexto organizacional (opcional)

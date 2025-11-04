@@ -35,7 +35,7 @@ El modelo sigue una arquitectura de **4 contextos conceptuales**:
 - `IAlerta` - Detección de anomalías y fugas
 
 ### 4. Contexto Seguridad y Autenticación (MongoDB-optimized)
-- `IPersonalOperativo` - Usuarios con permisos embebidos (1 query, NO referencias)
+- `IUsuario` - Usuarios del sistema con permisos embebidos (1 query, NO referencias)
 - `IPermisoUsuario` - Permisos embebidos por contexto organizacional (roles + permisos por módulo)
 - `TipoRol` - Tipos de roles como union type (NO entidad separada)
 - `IPermisosModulos` - Permisos granulares por módulo como objeto embebido
@@ -122,7 +122,7 @@ Los archivos `.doc.md` están **co-ubicados** con los archivos `.ts` correspondi
 - [`responses.doc.md`](src/interfaces/auxiliares/responses.doc.md) - Formatos estándar de respuestas HTTP
 
 #### 🔐 Seguridad y Autenticación (MongoDB-optimized)
-- [`personal-operativo.doc.md`](src/interfaces/seguridad/personal-operativo.doc.md) - Usuarios con permisos embebidos (modelo MongoDB)
+- [`usuario.doc.md`](src/interfaces/seguridad/usuario.doc.md) - Usuarios del sistema con permisos embebidos (modelo MongoDB)
 - [`sesion.doc.md`](src/interfaces/seguridad/sesion.doc.md) - Sesiones activas y tokens JWT
 
 **Navegación:**
@@ -155,16 +155,25 @@ src/
 │   ├── infraestructura/   # PuntoMedicion, UbicacionGeografica, ConfiguracionLecturaPunto, RelacionTopologica
 │   ├── datos/             # Lectura, FuenteDatos, ReferenciaExterna, ConfiguracionIntegracionPunto
 │   ├── analisis/          # BalanceHidrico, Alertas, Reportes
-│   └── seguridad/         # PersonalOperativo, Rol, Permiso, UsuarioRol, RolPermiso, Sesion
+│   └── seguridad/         # Usuario, TipoRol, TipoPermiso, Sesion (MongoDB-optimized)
 └── index.ts               # Export central
 ```
 
 ## 🚀 Versionamiento
 
-**Versión actual:** 1.3.0
+**Versión actual:** 1.3.1
 **Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025) + Patrón IRIX
 
 ### Historial
+- **1.3.1** - Refactor nomenclatura: PersonalOperativo → Usuario (4 Nov 2025)
+  - **BREAKING CHANGE**: Renombrado de interfaces para mayor claridad
+  - ✅ `IPersonalOperativo` → `IUsuario` (nombre más genérico y apropiado)
+  - ✅ `EstadoPersonal` → `EstadoUsuario`
+  - ✅ `ESTADOS_PERSONAL` → `ESTADOS_USUARIO`
+  - ✅ Archivos renombrados: `personal-operativo.ts` → `usuario.ts`
+  - Razón: El sistema tiene múltiples tipos de usuarios (admins, gerentes, analistas, técnicos, viewers), no solo "personal operativo"
+  - Documentación y referencias actualizadas en README
+
 - **1.3.0** - Refactor RBAC a modelo MongoDB-optimized (4 Nov 2025)
   - **BREAKING CHANGE**: Rediseño completo del sistema de seguridad siguiendo patrón de IRIX
   - ✅ **Modelo MongoDB-optimized**: Permisos embebidos, NO entidades separadas

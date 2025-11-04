@@ -1,14 +1,23 @@
-# Personal Operativo (Usuario) - Modelo MongoDB
+# Usuario - Modelo MongoDB
 
-**Entidad:** `IPersonalOperativo`, `IPermisoUsuario`
+**Entidad:** `IUsuario`, `IPermisoUsuario`
 **Contexto:** Seguridad / Autenticación
-**Versión:** 2.0.0 (MongoDB-optimized)
+**Versión:** 2.1.0 (MongoDB-optimized)
 
 ---
 
 ## 🎯 ¿Qué es?
 
-Representa a los **usuarios del sistema RIOTEC** con acceso operacional.
+Representa a los **usuarios del sistema RIOTEC** con acceso al sistema.
+
+Incluye todos los tipos de usuarios:
+- 👨‍💼 Administradores del sistema
+- 👔 Gerentes de división
+- 🔧 Supervisores de jefatura
+- 👷 Operadores (básicos y avanzados)
+- 📊 Analistas
+- 🛠️ Técnicos
+- 👀 Viewers/Consultores
 
 **Modelo MongoDB-optimized**: Siguiendo el patrón de IRIX, los permisos, roles y módulos están **embebidos** como arrays y objetos dentro del usuario, NO como referencias a entidades separadas. Esto permite obtener el usuario completo con todos sus permisos en **1 solo query**.
 
@@ -16,7 +25,7 @@ Representa a los **usuarios del sistema RIOTEC** con acceso operacional.
 
 ## 📋 Información que contiene
 
-### **IPersonalOperativo** (Usuario principal)
+### **IUsuario** (Usuario principal)
 
 | Campo | Qué representa | Ejemplo |
 |-------|----------------|---------|
@@ -51,7 +60,7 @@ Representa a los **usuarios del sistema RIOTEC** con acceso operacional.
 ## 💡 Ejemplo Completo: Operador de Jefatura Edén
 
 ```typescript
-const usuario: IPersonalOperativo = {
+const usuario: IUsuario = {
   _id: "usr-001",
   idCliente: "ose-uruguay",
   idDivision: "ugd-maldonado",
@@ -108,7 +117,7 @@ const usuario: IPersonalOperativo = {
 Un usuario puede tener múltiples permisos con diferentes alcances:
 
 ```typescript
-const usuario: IPersonalOperativo = {
+const usuario: IUsuario = {
   _id: "usr-supervisor",
   idCliente: "ose-uruguay",
   nombreCompleto: "María Gómez",
@@ -300,4 +309,4 @@ const permisoOperador: IPermisoUsuario = {
 
 ---
 
-**Ver:** `personal-operativo.ts`, `tipos-roles.ts`, `tipos-permisos.ts` para definiciones técnicas completas
+**Ver:** `usuario.ts`, `tipos-roles.ts`, `tipos-permisos.ts` para definiciones técnicas completas

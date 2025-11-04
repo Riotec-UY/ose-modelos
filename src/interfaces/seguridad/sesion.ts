@@ -27,7 +27,7 @@ export interface ISesion {
   /** Identificador único canónico (UUID) */
   _id: string;
 
-  /** ID del usuario (PersonalOperativo) */
+  /** ID del usuario (IUsuario) */
   idUsuario: string;
 
   /** Token JWT generado para esta sesión */

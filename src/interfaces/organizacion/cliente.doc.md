@@ -100,7 +100,7 @@ Cliente:
 
 - **División** (`IDivision`): Un cliente tiene múltiples divisiones
 - **Todo el sistema**: Todas las entidades tienen `idCliente` para aislamiento multi-tenant
-- **Personal Operativo** (`IPersonalOperativo`): Los usuarios pertenecen a un cliente
+- **Usuario** (`IUsuario`): Los usuarios del sistema pertenecen a un cliente
 
 **Jerarquía:**
 ```

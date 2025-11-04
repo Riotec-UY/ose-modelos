@@ -3,14 +3,14 @@ import { TipoRol } from './tipos-roles';
 import { IPermisosModulos } from './tipos-permisos';
 
 /**
- * Estado del personal operativo
+ * Estado del usuario
  */
-export type EstadoPersonal = 'activo' | 'inactivo' | 'suspendido';
+export type EstadoUsuario = 'activo' | 'inactivo' | 'suspendido';
 
 /**
  * Constante con todos los estados posibles
  */
-export const ESTADOS_PERSONAL: EstadoPersonal[] = ['activo', 'inactivo', 'suspendido'];
+export const ESTADOS_USUARIO: EstadoUsuario[] = ['activo', 'inactivo', 'suspendido'];
 
 /**
  * Alcance (scope) del permiso
@@ -24,7 +24,7 @@ export type AlcancePermiso = 'global' | 'division' | 'jefatura';
 export const ALCANCES_PERMISO: AlcancePermiso[] = ['global', 'division', 'jefatura'];
 
 /**
- * Permiso de Usuario (embebido en PersonalOperativo)
+ * Permiso de Usuario (embebido en Usuario)
  *
  * Representa un conjunto de permisos en un contexto organizacional específico.
  * Un usuario puede tener múltiples permisos con diferentes alcances.
@@ -94,9 +94,16 @@ export interface IPermisoUsuario {
 }
 
 /**
- * Personal Operativo (Usuario del Sistema)
+ * Usuario del Sistema
  *
- * Representa usuarios con acceso operacional al sistema RIOTEC.
+ * Representa cualquier usuario con acceso al sistema RIOTEC, incluyendo:
+ * - Administradores del sistema
+ * - Gerentes de división
+ * - Supervisores de jefatura
+ * - Operadores (básicos y avanzados)
+ * - Analistas
+ * - Técnicos
+ * - Viewers/Consultores
  *
  * **Modelo MongoDB-optimized**: Los permisos están embebidos como array,
  * NO como referencias a entidades separadas. Esto permite obtener
@@ -104,7 +111,7 @@ export interface IPermisoUsuario {
  *
  * Siguiendo el patrón de IRIX.
  */
-export interface IPersonalOperativo {
+export interface IUsuario {
   /** Identificador único canónico (UUID) */
   _id: string;
 
@@ -161,7 +168,7 @@ export interface IPersonalOperativo {
   permisos: IPermisoUsuario[];
 
   /** Estado del usuario */
-  estado: EstadoPersonal;
+  estado: EstadoUsuario;
 
   /** Fecha de último acceso al sistema (opcional) */
   fechaUltimoAcceso?: string; // ISO 8601
