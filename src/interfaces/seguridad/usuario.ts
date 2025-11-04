@@ -1,4 +1,3 @@
-import { IMetadatosAuditoria } from '../auxiliares/metadatos';
 import { TipoRol } from './tipos-roles';
 import { IPermisosModulos } from './tipos-permisos';
 
@@ -186,5 +185,6 @@ export interface IUsuario {
   fotoUrl?: string;
 
   /** Metadatos de auditoría (creación, modificación) */
-  metadatosAuditoria?: IMetadatosAuditoria;
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;  // Auto-generado (ISO 8601), inmutable
 }

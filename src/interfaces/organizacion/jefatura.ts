@@ -1,4 +1,3 @@
-import { IMetadatosAuditoria } from '../auxiliares';
 
 /**
  * Jefatura - Unidad territorial dentro de una División
@@ -19,7 +18,8 @@ export interface IJefatura {
   descripcion?: string;              // Descripción de la jefatura
   activo?: boolean;                  // Estado operacional
   configuracion?: Record<string, any>; // Configs específicas
-  metadatosAuditoria?: IMetadatosAuditoria;
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;            // Auto-generado (ISO 8601), inmutable
 
   // Virtuals (populados por query)
   division?: any; // IDivision
@@ -28,7 +28,7 @@ export interface IJefatura {
 /**
  * DTO para crear una jefatura
  */
-export interface ICreateJefatura extends Omit<Partial<IJefatura>, '_id' | 'division'> {
+export interface ICreateJefatura extends Omit<Partial<IJefatura>, '_id' | 'division' | 'fechaCreacion'> {
   idDivision: string; // Requerido
   nombre: string;     // Requerido
 }
@@ -36,4 +36,4 @@ export interface ICreateJefatura extends Omit<Partial<IJefatura>, '_id' | 'divis
 /**
  * DTO para actualizar una jefatura
  */
-export interface IUpdateJefatura extends Omit<Partial<IJefatura>, '_id' | 'division'> {}
+export interface IUpdateJefatura extends Omit<Partial<IJefatura>, '_id' | 'division' | 'fechaCreacion'> {}

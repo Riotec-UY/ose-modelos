@@ -1,4 +1,3 @@
-import { IMetadatosAuditoria, IMetadatosTecnicos } from '../auxiliares';
 import { IUbicacionGeografica } from './ubicacion-geografica';
 import { TipoLectura, CalidadDato } from '../datos/lectura';
 
@@ -383,7 +382,8 @@ export interface IPuntoMedicion {
   metadatosTecnicos?: IMetadatosTecnicos;
 
   // Auditoría
-  metadatosAuditoria?: IMetadatosAuditoria;
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;  // Auto-generado (ISO 8601), inmutable
 
   // Virtuals (populados por query)
   cliente?: any;     // ICliente
@@ -397,7 +397,7 @@ export interface IPuntoMedicion {
  */
 export interface ICreatePuntoMedicion extends Omit<
   Partial<IPuntoMedicion>,
-  '_id' | 'cliente' | 'division' | 'jefatura' | 'distrito' | 'ultimaLecturaPorTipo'
+  '_id' | 'cliente' | 'division' | 'jefatura' | 'distrito' | 'ultimaLecturaPorTipo' | 'fechaCreacion'
 > {
   idCliente: string;                            // Requerido
   nombre: string;                               // Requerido
@@ -413,5 +413,5 @@ export interface ICreatePuntoMedicion extends Omit<
  */
 export interface IUpdatePuntoMedicion extends Omit<
   Partial<IPuntoMedicion>,
-  '_id' | 'cliente' | 'division' | 'jefatura' | 'distrito'
+  '_id' | 'cliente' | 'division' | 'jefatura' | 'distrito' | 'fechaCreacion'
 > {}

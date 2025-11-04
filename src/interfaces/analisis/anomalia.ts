@@ -1,4 +1,3 @@
-import { ICoordenadas, IMetadatosAuditoria } from '../auxiliares';
 
 /**
  * Tipo de anomalía detectada
@@ -84,7 +83,8 @@ export interface IAnomalia {
   }[];
 
   // Auditoría
-  metadatosAuditoria?: IMetadatosAuditoria;
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;  // Auto-generado (ISO 8601), inmutable
 
   // Virtuals
   cliente?: any;         // ICliente
@@ -99,7 +99,7 @@ export interface IAnomalia {
  */
 export interface ICreateAnomalia extends Omit<
   Partial<IAnomalia>,
-  '_id' | 'cliente' | 'division' | 'jefatura' | 'distrito' | 'puntoMedicion'
+  '_id' | 'cliente' | 'division' | 'jefatura' | 'distrito' | 'puntoMedicion' | 'fechaCreacion'
 > {
   idCliente: string;               // Requerido
   tipo: TipoAnomalia;              // Requerido
@@ -114,5 +114,5 @@ export interface ICreateAnomalia extends Omit<
  */
 export interface IUpdateAnomalia extends Omit<
   Partial<IAnomalia>,
-  '_id' | 'cliente' | 'division' | 'jefatura' | 'distrito' | 'puntoMedicion'
+  '_id' | 'cliente' | 'division' | 'jefatura' | 'distrito' | 'puntoMedicion' | 'fechaCreacion'
 > {}

@@ -1,6 +1,8 @@
 /**
  * Metadatos de origen para trazabilidad de datos
- * Documentan desde qué sistema y cuándo se ingirió un dato
+ *
+ * Documentan desde qué sistema y cuándo se ingirió un dato.
+ * Usado principalmente en ILectura para rastrear la fuente de los datos.
  */
 export interface IMetadatosDeOrigen {
   fuente: string;              // ID de FuenteDatos (ej: "SCADA Zeus", "ATLAS")
@@ -11,20 +13,10 @@ export interface IMetadatosDeOrigen {
 }
 
 /**
- * Metadatos de auditoría para todas las entidades
- */
-export interface IMetadatosAuditoria {
-  fechaCreacion?: string;           // ISO 8601
-  fechaUltimaModificacion?: string; // ISO 8601
-  creadoPor?: string;               // ID de usuario/sistema
-  modificadoPor?: string;           // ID de usuario/sistema
-  version?: number;                 // Número de versión para optimistic locking
-}
-
-/**
  * Metadatos técnicos flexibles
+ *
  * Usados para almacenar información específica por tipo de entidad
- * sin crear campos rígidos en el modelo
+ * sin crear campos rígidos en el modelo.
  *
  * Ejemplos:
  * - PuntoMedicion tipo 'booster': { capacidadBombeo: 100, potencia: 50 }

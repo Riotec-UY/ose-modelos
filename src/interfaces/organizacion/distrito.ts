@@ -1,4 +1,3 @@
-import { ICoordenadas, IGeoJSON, IMetadatosAuditoria } from '../auxiliares';
 
 /**
  * Distrito Pitométrico - Zona de balance hídrico
@@ -73,7 +72,8 @@ export interface IDistrito {
     metodoCalculo?: 'simple' | 'avanzado'; // Método de cálculo del balance
   };
 
-  metadatosAuditoria?: IMetadatosAuditoria;
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;            // Auto-generado (ISO 8601), inmutable
 
   // Virtuals (populados por query)
   jefatura?: any; // IJefatura
@@ -82,7 +82,7 @@ export interface IDistrito {
 /**
  * DTO para crear un distrito
  */
-export interface ICreateDistrito extends Omit<Partial<IDistrito>, '_id' | 'jefatura'> {
+export interface ICreateDistrito extends Omit<Partial<IDistrito>, '_id' | 'jefatura' | 'fechaCreacion'> {
   idJefatura: string; // Requerido
   nombre: string;     // Requerido
 }
@@ -90,4 +90,4 @@ export interface ICreateDistrito extends Omit<Partial<IDistrito>, '_id' | 'jefat
 /**
  * DTO para actualizar un distrito
  */
-export interface IUpdateDistrito extends Omit<Partial<IDistrito>, '_id' | 'jefatura'> {}
+export interface IUpdateDistrito extends Omit<Partial<IDistrito>, '_id' | 'jefatura' | 'fechaCreacion'> {}

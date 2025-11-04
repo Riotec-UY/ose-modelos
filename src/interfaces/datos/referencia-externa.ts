@@ -1,4 +1,3 @@
-import { IMetadatosAuditoria } from '../auxiliares';
 
 /**
  * Tipo de entidad canónica referenciada
@@ -60,7 +59,8 @@ export interface IReferenciaExterna {
   metadatosAdicionales?: Record<string, any>; // Información extra del mapeo
 
   // Auditoría
-  metadatosAuditoria?: IMetadatosAuditoria;
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;  // Auto-generado (ISO 8601), inmutable
 
   // Virtuals
   // fuente?: IFuenteDatos;
@@ -71,7 +71,7 @@ export interface IReferenciaExterna {
  */
 export interface ICreateReferenciaExterna extends Omit<
   Partial<IReferenciaExterna>,
-  '_id'
+  '_id' | 'fechaCreacion'
 > {
   entidadCanonica: {                 // Requerido
     id: string;
@@ -87,5 +87,5 @@ export interface ICreateReferenciaExterna extends Omit<
  */
 export interface IUpdateReferenciaExterna extends Omit<
   Partial<IReferenciaExterna>,
-  '_id'
+  '_id' | 'fechaCreacion'
 > {}

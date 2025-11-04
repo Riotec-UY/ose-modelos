@@ -1,5 +1,3 @@
-import { IMetadatosAuditoria } from '../auxiliares';
-
 /**
  * Cliente - Raíz del multi-tenancy
  *
@@ -9,6 +7,10 @@ import { IMetadatosAuditoria } from '../auxiliares';
  * Notas:
  * - Algunos clientes son "semilla" (tenantSemilla: true)
  * - El cliente semilla contiene configuraciones maestras
+ *
+ * Auditoría:
+ * - fechaCreacion: Auto-generado en creación (inmutable)
+ * - Cambios auditados en colección separada IAuditoria (patrón GAS/INSIDE)
  */
 export interface ICliente {
   _id?: string;
@@ -17,17 +19,19 @@ export interface ICliente {
   tenantSemilla?: boolean;           // true si es cliente maestro/semilla
   activo?: boolean;                  // Estado del cliente
   configuracion?: Record<string, any>; // Configuraciones específicas del cliente
-  metadatosAuditoria?: IMetadatosAuditoria;
+
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;            // Auto-generado (ISO 8601), inmutable
 }
 
 /**
  * DTO para crear un cliente
  */
-export interface ICreateCliente extends Omit<Partial<ICliente>, '_id'> {
+export interface ICreateCliente extends Omit<Partial<ICliente>, '_id' | 'fechaCreacion'> {
   nombre: string; // Requerido
 }
 
 /**
  * DTO para actualizar un cliente
  */
-export interface IUpdateCliente extends Omit<Partial<ICliente>, '_id'> {}
+export interface IUpdateCliente extends Omit<Partial<ICliente>, '_id' | 'fechaCreacion'> {}

@@ -114,9 +114,10 @@ Los archivos `.doc.md` están **co-ubicados** con los archivos `.ts` correspondi
 - [`serie-temporal.doc.md`](src/interfaces/analisis/serie-temporal.doc.md) - Series temporales para análisis
 
 #### 🔧 Auxiliares
-- [`geojson.doc.md`](src/interfaces/auxiliares/geojson.doc.md) - Geometrías geográficas GeoJSON (Point, Polygon, Circle) ⭐ NUEVO
+- [`auditoria.doc.md`](src/interfaces/auxiliares/auditoria.doc.md) - Sistema de trazabilidad completo (patrón GAS/INSIDE) ⭐ NUEVO v1.5
+- [`geojson.doc.md`](src/interfaces/auxiliares/geojson.doc.md) - Geometrías geográficas GeoJSON (Point, Polygon, Circle)
 - [`coordenadas.doc.md`](src/interfaces/auxiliares/coordenadas.doc.md) - Puntos geográficos simples (compatibilidad)
-- [`metadatos.doc.md`](src/interfaces/auxiliares/metadatos.doc.md) - Metadatos de origen, auditoría y técnicos
+- [`metadatos.doc.md`](src/interfaces/auxiliares/metadatos.doc.md) - Metadatos de origen y técnicos
 - [`queryParams.doc.md`](src/interfaces/auxiliares/queryParams.doc.md) - Parámetros de consulta para APIs
 - [`responses.doc.md`](src/interfaces/auxiliares/responses.doc.md) - Formatos estándar de respuestas HTTP
 
@@ -161,10 +162,25 @@ src/
 
 ## 🚀 Versionamiento
 
-**Versión actual:** 1.4.0
-**Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025) + Patrón IRIX MongoDB-optimized
+**Versión actual:** 1.5.0
+**Base del modelo:** MODELO-CONCEPTUAL.md v3.3 (4 Nov 2025) + Patrón GAS/INSIDE auditorías
 
 ### Historial
+- **1.5.0** - Sistema de auditorías completo - Patrón GAS/INSIDE (4 Nov 2025)
+  - ✅ **Patrón GAS/INSIDE**: Auditorías con snapshots inmutables en colección separada
+  - ✅ **Nueva entidad**: `IAuditoria` - Trazabilidad completa de todos los cambios
+  - ✅ **Snapshots completos**: Cada cambio guarda el estado completo del objeto
+  - ✅ **Auditoría de deletes**: Preserva último snapshot antes de eliminación
+  - ✅ **Cumplimiento regulatorio**: Requisitos OSE como empresa pública (7 años retención)
+  - ✅ **Auditoría simple en entidades**: Solo campo `fechaCreacion` (auto-generado, inmutable)
+  - ✅ **Eliminado**: `IMetadatosAuditoria` (objeto anidado embebido)
+  - ✅ **DTOs actualizados**: Todos excluyen `fechaCreacion` de Create/Update
+  - ✅ **Documentación completa**: `auditoria.doc.md` con casos de uso y queries MongoDB
+  - ✅ **Índices MongoDB**: 4 índices compuestos para queries eficientes
+  - ✅ **TTL support**: Expiración automática configurable por documento
+  - Beneficios: Historial completo, reconstrucción de estado, queries simples
+  - Patrón adaptado desde GAS/INSIDE sistema de gestión de almacenes
+
 - **1.4.0** - Configuraciones embebidas en IPuntoMedicion - MongoDB-optimized (4 Nov 2025)
   - ✅ **Patrón MongoDB-optimized**: Configuraciones embebidas siguiendo patrón IRIX/INSIDE
   - ✅ **IPuntoMedicion refactorizado**: Ahora incluye `configuracionesLectura[]`, `configuracionIntegracion`, `ultimaLecturaPorTipo`

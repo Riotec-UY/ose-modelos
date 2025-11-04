@@ -1,5 +1,3 @@
-import { IMetadatosAuditoria } from '../auxiliares';
-
 /**
  * División - Unidad operacional del cliente
  *
@@ -10,6 +8,10 @@ import { IMetadatosAuditoria } from '../auxiliares';
  * - Pertenece a un Cliente
  * - Contiene múltiples Jefaturas
  * - Puede tener configuraciones operacionales específicas
+ *
+ * Auditoría:
+ * - fechaCreacion: Auto-generado en creación (inmutable)
+ * - Cambios auditados en colección separada IAuditoria (patrón GAS/INSIDE)
  */
 export interface IDivision {
   _id?: string;
@@ -19,7 +21,9 @@ export interface IDivision {
   descripcion?: string;              // Descripción de la división
   activo?: boolean;                  // Estado operacional
   configuracion?: Record<string, any>; // Configs específicas (horarios, umbrales, etc.)
-  metadatosAuditoria?: IMetadatosAuditoria;
+
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;            // Auto-generado (ISO 8601), inmutable
 
   // Virtuals (populados por query)
   cliente?: any; // ICliente (evitamos import circular)
@@ -28,7 +32,7 @@ export interface IDivision {
 /**
  * DTO para crear una división
  */
-export interface ICreateDivision extends Omit<Partial<IDivision>, '_id' | 'cliente'> {
+export interface ICreateDivision extends Omit<Partial<IDivision>, '_id' | 'cliente' | 'fechaCreacion'> {
   idCliente: string; // Requerido
   nombre: string;    // Requerido
 }
@@ -36,4 +40,4 @@ export interface ICreateDivision extends Omit<Partial<IDivision>, '_id' | 'clien
 /**
  * DTO para actualizar una división
  */
-export interface IUpdateDivision extends Omit<Partial<IDivision>, '_id' | 'cliente'> {}
+export interface IUpdateDivision extends Omit<Partial<IDivision>, '_id' | 'cliente' | 'fechaCreacion'> {}

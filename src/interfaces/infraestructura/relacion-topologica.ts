@@ -11,7 +11,6 @@
  * - Cálculo de balance por sector: agua que entra vs agua que sale en un sub-circuito
  */
 
-import { IMetadatosAuditoria } from '../auxiliares/metadatos';
 
 /**
  * Tipos de relaciones topológicas entre puntos
@@ -62,7 +61,8 @@ export interface IRelacionTopologica {
   // Metadatos operativos
   descripcion?: string;
   notas?: string;
-  metadatosAuditoria?: IMetadatosAuditoria;
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;  // Auto-generado (ISO 8601), inmutable
 
   // Virtuals (poblados por backend)
   puntoOrigen?: any;  // IPuntoMedicion
@@ -75,7 +75,7 @@ export interface IRelacionTopologica {
  */
 export interface ICreateRelacionTopologica extends Omit<
   Partial<IRelacionTopologica>,
-  '_id' | 'metadatosAuditoria' | 'puntoOrigen' | 'puntoDestino' | 'distrito'
+  '_id' | 'fechaCreacion' | 'puntoOrigen' | 'puntoDestino' | 'distrito'
 > {
   // Campos requeridos
   idCliente: string;
@@ -90,7 +90,7 @@ export interface ICreateRelacionTopologica extends Omit<
  */
 export interface IUpdateRelacionTopologica extends Omit<
   Partial<IRelacionTopologica>,
-  '_id' | 'idCliente' | 'idPuntoOrigen' | 'idPuntoDestino' | 'metadatosAuditoria' | 'puntoOrigen' | 'puntoDestino' | 'distrito'
+  '_id' | 'idCliente' | 'idPuntoOrigen' | 'idPuntoDestino' | 'fechaCreacion' | 'puntoOrigen' | 'puntoDestino' | 'distrito'
 > {}
 
 /**

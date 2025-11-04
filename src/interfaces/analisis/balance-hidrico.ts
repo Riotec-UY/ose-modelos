@@ -1,4 +1,3 @@
-import { IMetadatosAuditoria } from '../auxiliares';
 
 /**
  * Período del balance hídrico
@@ -70,7 +69,8 @@ export interface IBalanceHidrico {
   };
 
   // Auditoría
-  metadatosAuditoria?: IMetadatosAuditoria;
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;  // Auto-generado (ISO 8601), inmutable
 
   // Virtuals
   cliente?: any;    // ICliente
@@ -82,7 +82,7 @@ export interface IBalanceHidrico {
  */
 export interface ICreateBalanceHidrico extends Omit<
   Partial<IBalanceHidrico>,
-  '_id' | 'cliente' | 'distrito'
+  '_id' | 'cliente' | 'distrito' | 'fechaCreacion'
 > {
   idCliente: string;                 // Requerido
   idDistrito: string;                // Requerido
@@ -104,5 +104,5 @@ export interface ICreateBalanceHidrico extends Omit<
  */
 export interface IUpdateBalanceHidrico extends Omit<
   Partial<IBalanceHidrico>,
-  '_id' | 'cliente' | 'distrito'
+  '_id' | 'cliente' | 'distrito' | 'fechaCreacion'
 > {}

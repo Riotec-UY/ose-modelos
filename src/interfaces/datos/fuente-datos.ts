@@ -1,4 +1,3 @@
-import { IMetadatosAuditoria } from '../auxiliares';
 
 /**
  * Tipo de fuente de datos externa
@@ -63,7 +62,8 @@ export interface IFuenteDatos {
   metadatos?: Record<string, any>; // Configuraciones específicas por tipo
 
   // Auditoría
-  metadatosAuditoria?: IMetadatosAuditoria;
+  // Auditoría simple (patrón GAS/INSIDE)
+  fechaCreacion?: string;  // Auto-generado (ISO 8601), inmutable
 
   // Virtuals
   cliente?: any; // ICliente
@@ -74,7 +74,7 @@ export interface IFuenteDatos {
  */
 export interface ICreateFuenteDatos extends Omit<
   Partial<IFuenteDatos>,
-  '_id' | 'cliente'
+  '_id' | 'cliente' | 'fechaCreacion'
 > {
   idCliente: string;    // Requerido
   nombre: string;       // Requerido
@@ -87,5 +87,5 @@ export interface ICreateFuenteDatos extends Omit<
  */
 export interface IUpdateFuenteDatos extends Omit<
   Partial<IFuenteDatos>,
-  '_id' | 'cliente'
+  '_id' | 'cliente' | 'fechaCreacion'
 > {}
