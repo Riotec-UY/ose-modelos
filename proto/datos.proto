@@ -1,0 +1,599 @@
+syntax = "proto3";
+
+package ose.datos.datos;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/any.proto";
+import "auxiliares.proto";
+
+message IDatoClimatico {
+  optional string _id = 1;
+  string idCliente = 2;
+  string idEstacionClimaticaVirtual = 3;
+  string timestamp = 4;
+  optional double temperatura = 5;
+  optional double humedad = 6;
+  optional double precipitacion = 7;
+  optional double presionAtmosferica = 8;
+  optional double velocidadViento = 9;
+  optional double direccionViento = 10;
+  optional double coberturaNubes = 11;
+  optional double indiceUV = 12;
+  optional double visibilidad = 13;
+  optional double puntoRocio = 14;
+  optional double sensacionTermica = 15;
+  optional double probabilidadPrecipitacion = 16;
+  optional double temperaturaMinima = 17;
+  optional double temperaturaMaxima = 18;
+  string tipoDato = 19;
+  string calidadDato = 20;
+  string idFuenteDatos = 21;
+  optional string fechaCreacion = 22;
+  optional google.protobuf.Any estacionClimaticaVirtual = 23;
+  optional google.protobuf.Any fuenteDatos = 24;
+}
+
+message ICreateDatoClimatico {
+  string idCliente = 1;
+  string idEstacionClimaticaVirtual = 2;
+  string timestamp = 3;
+  string tipoDato = 4;
+  string calidadDato = 5;
+  string idFuenteDatos = 6;
+  optional double temperatura = 7;
+  optional double humedad = 8;
+  optional double precipitacion = 9;
+  optional double presionAtmosferica = 10;
+  optional double velocidadViento = 11;
+  optional double direccionViento = 12;
+  optional double coberturaNubes = 13;
+  optional double indiceUV = 14;
+  optional double visibilidad = 15;
+  optional double puntoRocio = 16;
+  optional double sensacionTermica = 17;
+  optional double probabilidadPrecipitacion = 18;
+  optional double temperaturaMinima = 19;
+  optional double temperaturaMaxima = 20;
+}
+
+message IUpdateDatoClimatico {
+  optional string timestamp = 1;
+  optional double temperatura = 2;
+  optional double humedad = 3;
+  optional double precipitacion = 4;
+  optional double presionAtmosferica = 5;
+  optional double velocidadViento = 6;
+  optional double direccionViento = 7;
+  optional double coberturaNubes = 8;
+  optional double indiceUV = 9;
+  optional double visibilidad = 10;
+  optional double puntoRocio = 11;
+  optional double sensacionTermica = 12;
+  optional double probabilidadPrecipitacion = 13;
+  optional double temperaturaMinima = 14;
+  optional double temperaturaMaxima = 15;
+  optional string tipoDato = 16;
+  optional string calidadDato = 17;
+  optional string idFuenteDatos = 18;
+}
+
+message IFuenteDatos {
+  optional string _id = 1;
+  string idCliente = 2;
+  string nombre = 3;
+  optional string codigo = 4;
+  string tipo = 5;
+  optional string configuracion = 6;
+  string estado = 7;
+  optional string mensajeEstado = 8;
+  optional string erroresRecientes = 9;
+  optional google.protobuf.Struct metadatos = 10;
+  optional string fechaCreacion = 11;
+  optional google.protobuf.Any cliente = 12;
+}
+
+message ICreateFuenteDatos {
+  string idCliente = 1;
+  string nombre = 2;
+  string tipo = 3;
+  string estado = 4;
+  optional string codigo = 5;
+  optional string configuracion = 6;
+  optional string mensajeEstado = 7;
+  optional string erroresRecientes = 8;
+  optional google.protobuf.Struct metadatos = 9;
+}
+
+message IUpdateFuenteDatos {
+  optional string idCliente = 1;
+  optional string nombre = 2;
+  optional string codigo = 3;
+  optional string tipo = 4;
+  optional string configuracion = 5;
+  optional string estado = 6;
+  optional string mensajeEstado = 7;
+  optional string erroresRecientes = 8;
+  optional google.protobuf.Struct metadatos = 9;
+}
+
+message IValoresMacromedidorCaudal {
+  string timestamp = 1;
+  double caudal = 2;
+  double caudalAcumulado = 3;
+  optional double presion = 4;
+}
+
+message IValoresMacromedidorPresion {
+  string timestamp = 1;
+  double presion = 2;
+  optional double caudal = 3;
+}
+
+message IValoresMedidorResidencial {
+  string timestamp = 1;
+  double consumoAcumulado = 2;
+  optional double caudal = 3;
+  optional double bateria = 4;
+  optional double senal = 5;
+  optional double temperatura = 6;
+}
+
+message IValoresSensorCloro {
+  string timestamp = 1;
+  double cloroResidual = 2;
+  optional double temperatura = 3;
+}
+
+message IValoresSensorPH {
+  string timestamp = 1;
+  double ph = 2;
+  optional double temperatura = 3;
+}
+
+message IValoresSensorTurbidez {
+  string timestamp = 1;
+  double turbidez = 2;
+  optional double temperatura = 3;
+}
+
+message IValoresBoosterPresion {
+  string timestamp = 1;
+  double presion = 2;
+  optional bool bombaActiva = 3;
+  optional string estadoBomba = 4;
+}
+
+message IValoresBoosterCaudal {
+  string timestamp = 1;
+  double caudal = 2;
+  optional double potenciaConsumida = 3;
+}
+
+message IValoresDepositoNivel {
+  string timestamp = 1;
+  double nivel = 2;
+  optional double volumen = 3;
+  optional double capacidad = 4;
+  optional double porcentajeLlenado = 5;
+}
+
+message IValoresPerforacionCaudal {
+  string timestamp = 1;
+  double caudal = 2;
+  double caudalAcumulado = 3;
+  optional double horimetro = 4;
+  optional string estadoBomba = 5;
+}
+
+message ILecturaBase {
+  optional string _id = 1;
+  string idPuntoMedicion = 2;
+  string idCliente = 3;
+  string tipoLectura = 4;
+  string valores = 5;
+  string calidadDato = 6;
+  optional ose.datos.auxiliares.IMetadatosDeOrigen metadatosOrigen = 7;
+  optional string fechaCreacion = 8;
+  optional string expireAt = 9;
+  optional google.protobuf.Any puntoMedicion = 10;
+  optional google.protobuf.Any cliente = 11;
+}
+
+message ICreateLectura {
+  string idCliente = 1;
+  string idPuntoMedicion = 2;
+  string tipoLectura = 3;
+  string valores = 4;
+  string calidadDato = 5;
+  optional ose.datos.auxiliares.IMetadatosDeOrigen metadatosOrigen = 6;
+  optional string expireAt = 7;
+}
+
+message IUpdateLectura {
+  optional string fechaCreacion = 1;
+  optional string valores = 2;
+  optional string calidadDato = 3;
+  optional ose.datos.auxiliares.IMetadatosDeOrigen metadatosOrigen = 4;
+  optional string expireAt = 5;
+}
+
+message IReferenciaExterna {
+  optional string _id = 1;
+  string entidadCanonica = 2;
+  string fuenteDatos = 3;
+  string idExterno = 4;
+  optional string tipoExterno = 5;
+  string estado = 6;
+  optional string fechaUltimaVerificacion = 7;
+  optional string metadatosAdicionales = 8;  // JSON string
+  optional string fechaCreacion = 9;
+}
+
+message ICreateReferenciaExterna {
+  string entidadCanonica = 1;
+  string fuenteDatos = 2;
+  string idExterno = 3;
+  string estado = 4;
+  optional string tipoExterno = 5;
+  optional string fechaUltimaVerificacion = 6;
+  optional string metadatosAdicionales = 7;  // JSON string
+}
+
+message IUpdateReferenciaExterna {
+  optional string entidadCanonica = 1;
+  optional string fuenteDatos = 2;
+  optional string idExterno = 3;
+  optional string tipoExterno = 4;
+  optional string estado = 5;
+  optional string fechaUltimaVerificacion = 6;
+  optional string metadatosAdicionales = 7;  // JSON string
+}
+
+message IRegistroSincronizacion {
+  optional string _id = 1;
+  string idCliente = 2;
+  string idFuenteDatos = 3;
+  string tipoOperacion = 4;
+  string timestampInicio = 5;
+  optional string timestampFin = 6;
+  string resultado = 7;
+  optional string mensajeResultado = 8;
+  string estadisticas = 9;  // JSON string: IEstadisticasSincronizacion
+  optional string errores = 10;  // JSON array: IErrorSincronizacion[]
+  optional double erroresCriticos = 11;
+  optional double erroresTotales = 12;
+  optional string usuarioEjecucion = 13;
+  optional bool esManual = 14;
+  optional string parametros = 15;  // JSON string
+  optional string metadatosAdicionales = 16;  // JSON string
+  optional string fechaCreacion = 17;
+  optional google.protobuf.Any cliente = 18;
+  optional google.protobuf.Any fuenteDatos = 19;
+  optional google.protobuf.Any usuario = 20;
+}
+
+message ICreateRegistroSincronizacion {
+  string idCliente = 1;
+  string idFuenteDatos = 2;
+  string tipoOperacion = 3;
+  string timestampInicio = 4;
+  string resultado = 5;
+  string estadisticas = 6;  // JSON string: IEstadisticasSincronizacion
+  optional string timestampFin = 7;
+  optional string mensajeResultado = 8;
+  optional string errores = 9;  // JSON array: IErrorSincronizacion[]
+  optional double erroresCriticos = 10;
+  optional double erroresTotales = 11;
+  optional string usuarioEjecucion = 12;
+  optional bool esManual = 13;
+  optional string parametros = 14;  // JSON string
+  optional string metadatosAdicionales = 15;  // JSON string
+}
+
+message IUpdateRegistroSincronizacion {
+  optional string timestampFin = 1;
+  optional string resultado = 2;
+  optional string mensajeResultado = 3;
+  optional string estadisticas = 4;  // JSON string: IEstadisticasSincronizacion
+  optional string errores = 5;  // JSON array: IErrorSincronizacion[]
+  optional double erroresCriticos = 6;
+  optional double erroresTotales = 7;
+  optional string usuarioEjecucion = 8;
+  optional bool esManual = 9;
+  optional string parametros = 10;  // JSON string
+  optional string metadatosAdicionales = 11;  // JSON string
+}
+
+message IMapaCampo {
+  string campoOrigen = 1;
+  optional string tipoDatoOrigen = 2;
+  string campoDestino = 3;
+  optional string tipoDatoDestino = 4;
+  string transformacion = 5;
+  optional google.protobuf.Struct parametrosTransformacion = 6;
+  optional bool requerido = 7;
+  optional google.protobuf.Any valorPorDefecto = 8;
+  optional string condicion = 9;
+}
+
+message IReglaValidacion {
+  string tipo = 1;
+  string campo = 2;
+  optional google.protobuf.Struct parametros = 3;
+  optional string mensajeError = 4;
+  optional string severidad = 5;
+}
+
+message IReglaMapeo {
+  optional string _id = 1;
+  string idCliente = 2;
+  string idFuenteDatos = 3;
+  string nombre = 4;
+  optional string descripcion = 5;
+  optional bool activo = 6;
+  string tipoOrigen = 7;
+  string tipoDestino = 8;
+  string mapasCampos = 9;  // JSON string
+  optional string validaciones = 10;  // JSON string
+  string estrategiaActualizacion = 11;
+  optional double prioridad = 12;
+  optional string filtroOrigen = 13;
+  optional string campoIdentificador = 14;
+  optional string version = 15;
+  optional string ultimaActualizacion = 16;
+  optional string creadoPor = 17;
+  optional string actualizadoPor = 18;
+  optional string fechaCreacion = 19;
+  optional google.protobuf.Any cliente = 20;
+  optional google.protobuf.Any fuenteDatos = 21;
+}
+
+message ICreateReglaMapeo {
+  string idCliente = 1;
+  string idFuenteDatos = 2;
+  string nombre = 3;
+  string tipoOrigen = 4;
+  string tipoDestino = 5;
+  string mapasCampos = 6;  // JSON string
+  string estrategiaActualizacion = 7;
+  optional string descripcion = 8;
+  optional bool activo = 9;
+  optional string validaciones = 10;  // JSON string
+  optional double prioridad = 11;
+  optional string filtroOrigen = 12;
+  optional string campoIdentificador = 13;
+  optional string version = 14;
+  optional string ultimaActualizacion = 15;
+  optional string creadoPor = 16;
+  optional string actualizadoPor = 17;
+}
+
+message IUpdateReglaMapeo {
+  optional string nombre = 1;
+  optional string descripcion = 2;
+  optional bool activo = 3;
+  optional string tipoOrigen = 4;
+  optional string tipoDestino = 5;
+  optional string mapasCampos = 6;  // JSON string
+  optional string validaciones = 7;  // JSON string
+  optional string estrategiaActualizacion = 8;
+  optional double prioridad = 9;
+  optional string filtroOrigen = 10;
+  optional string campoIdentificador = 11;
+  optional string version = 12;
+  optional string ultimaActualizacion = 13;
+  optional string creadoPor = 14;
+  optional string actualizadoPor = 15;
+}
+
+message IContactoSoporte {
+  optional string nombre = 1;
+  optional string email = 2;
+  optional string telefono = 3;
+  optional string horarioAtencion = 4;
+  optional string urlSoporte = 5;
+  optional string nivelSoporte = 6;
+}
+
+message ISistemaExterno {
+  optional string _id = 1;
+  string nombre = 2;
+  optional string nombreComercial = 3;
+  optional string codigo = 4;
+  string tipo = 5;
+  string proveedor = 6;
+  optional string urlProveedor = 7;
+  optional string version = 8;
+  repeated string versionesCompatibles = 9;
+  repeated string protocolosSoportados = 10;
+  optional string protocoloRecomendado = 11;
+  repeated string caracteristicas = 12;
+  optional string urlDocumentacion = 13;
+  optional string urlAPIDoc = 14;
+  repeated string ejemplosIntegracion = 15;
+  optional string notas = 16;
+  optional IContactoSoporte contactoSoporte = 17;
+  string estado = 18;
+  optional string fechaAgregado = 19;
+  optional string fechaDeprecacion = 20;
+  optional string requisitos = 21;
+  repeated string limitaciones = 22;
+  optional double cantidadInstancias = 23;
+  optional google.protobuf.Struct metadatos = 24;
+  optional string fechaCreacion = 25;
+}
+
+message ICreateSistemaExterno {
+  string nombre = 1;
+  string tipo = 2;
+  string proveedor = 3;
+  repeated string protocolosSoportados = 4;
+  string estado = 5;
+  optional string nombreComercial = 6;
+  optional string codigo = 7;
+  optional string urlProveedor = 8;
+  optional string version = 9;
+  repeated string versionesCompatibles = 10;
+  optional string protocoloRecomendado = 11;
+  repeated string caracteristicas = 12;
+  optional string urlDocumentacion = 13;
+  optional string urlAPIDoc = 14;
+  repeated string ejemplosIntegracion = 15;
+  optional string notas = 16;
+  optional IContactoSoporte contactoSoporte = 17;
+  optional string fechaAgregado = 18;
+  optional string fechaDeprecacion = 19;
+  optional string requisitos = 20;
+  repeated string limitaciones = 21;
+  optional google.protobuf.Struct metadatos = 22;
+}
+
+message IUpdateSistemaExterno {
+  optional string nombre = 1;
+  optional string nombreComercial = 2;
+  optional string codigo = 3;
+  optional string tipo = 4;
+  optional string proveedor = 5;
+  optional string urlProveedor = 6;
+  optional string version = 7;
+  repeated string versionesCompatibles = 8;
+  repeated string protocolosSoportados = 9;
+  optional string protocoloRecomendado = 10;
+  repeated string caracteristicas = 11;
+  optional string urlDocumentacion = 12;
+  optional string urlAPIDoc = 13;
+  repeated string ejemplosIntegracion = 14;
+  optional string notas = 15;
+  optional IContactoSoporte contactoSoporte = 16;
+  optional string estado = 17;
+  optional string fechaAgregado = 18;
+  optional string fechaDeprecacion = 19;
+  optional string requisitos = 20;
+  repeated string limitaciones = 21;
+  optional google.protobuf.Struct metadatos = 22;
+}
+
+
+service DatoClimaticoService {
+  rpc Create(ICreateDatoClimatico) returns (IDatoClimatico);
+  rpc Find(QueryRequest) returns (IDatoClimaticoList);
+  rpc FindById(IdRequest) returns (IDatoClimatico);
+  rpc Update(UpdateDatoClimaticoRequest) returns (IDatoClimatico);
+  rpc Delete(IdRequest) returns (DeleteResponse);
+}
+
+message UpdateDatoClimaticoRequest {
+  string id = 1;
+  IUpdateDatoClimatico data = 2;
+}
+
+message IDatoClimaticoList {
+  repeated IDatoClimatico items = 1;
+  int32 total = 2;
+}
+
+service FuenteDatosService {
+  rpc Create(ICreateFuenteDatos) returns (IFuenteDatos);
+  rpc Find(QueryRequest) returns (IFuenteDatosList);
+  rpc FindById(IdRequest) returns (IFuenteDatos);
+  rpc Update(UpdateFuenteDatosRequest) returns (IFuenteDatos);
+  rpc Delete(IdRequest) returns (DeleteResponse);
+}
+
+message UpdateFuenteDatosRequest {
+  string id = 1;
+  IUpdateFuenteDatos data = 2;
+}
+
+message IFuenteDatosList {
+  repeated IFuenteDatos items = 1;
+  int32 total = 2;
+}
+
+service ReferenciaExternaService {
+  rpc Create(ICreateReferenciaExterna) returns (IReferenciaExterna);
+  rpc Find(QueryRequest) returns (IReferenciaExternaList);
+  rpc FindById(IdRequest) returns (IReferenciaExterna);
+  rpc Update(UpdateReferenciaExternaRequest) returns (IReferenciaExterna);
+  rpc Delete(IdRequest) returns (DeleteResponse);
+}
+
+message UpdateReferenciaExternaRequest {
+  string id = 1;
+  IUpdateReferenciaExterna data = 2;
+}
+
+message IReferenciaExternaList {
+  repeated IReferenciaExterna items = 1;
+  int32 total = 2;
+}
+
+service RegistroSincronizacionService {
+  rpc Create(ICreateRegistroSincronizacion) returns (IRegistroSincronizacion);
+  rpc Find(QueryRequest) returns (IRegistroSincronizacionList);
+  rpc FindById(IdRequest) returns (IRegistroSincronizacion);
+  rpc Update(UpdateRegistroSincronizacionRequest) returns (IRegistroSincronizacion);
+  rpc Delete(IdRequest) returns (DeleteResponse);
+}
+
+message UpdateRegistroSincronizacionRequest {
+  string id = 1;
+  IUpdateRegistroSincronizacion data = 2;
+}
+
+message IRegistroSincronizacionList {
+  repeated IRegistroSincronizacion items = 1;
+  int32 total = 2;
+}
+
+service ReglaMapeoService {
+  rpc Create(ICreateReglaMapeo) returns (IReglaMapeo);
+  rpc Find(QueryRequest) returns (IReglaMapeoList);
+  rpc FindById(IdRequest) returns (IReglaMapeo);
+  rpc Update(UpdateReglaMapeoRequest) returns (IReglaMapeo);
+  rpc Delete(IdRequest) returns (DeleteResponse);
+}
+
+message UpdateReglaMapeoRequest {
+  string id = 1;
+  IUpdateReglaMapeo data = 2;
+}
+
+message IReglaMapeoList {
+  repeated IReglaMapeo items = 1;
+  int32 total = 2;
+}
+
+service SistemaExternoService {
+  rpc Create(ICreateSistemaExterno) returns (ISistemaExterno);
+  rpc Find(QueryRequest) returns (ISistemaExternoList);
+  rpc FindById(IdRequest) returns (ISistemaExterno);
+  rpc Update(UpdateSistemaExternoRequest) returns (ISistemaExterno);
+  rpc Delete(IdRequest) returns (DeleteResponse);
+}
+
+message UpdateSistemaExternoRequest {
+  string id = 1;
+  IUpdateSistemaExterno data = 2;
+}
+
+message ISistemaExternoList {
+  repeated ISistemaExterno items = 1;
+  int32 total = 2;
+}
+
+message QueryRequest {
+  optional string filter = 1;
+  optional int32 limit = 2;
+  optional int32 skip = 3;
+}
+
+message IdRequest {
+  string id = 1;
+}
+
+message DeleteResponse {
+  bool success = 1;
+  string message = 2;
+}

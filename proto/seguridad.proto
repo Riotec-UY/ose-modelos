@@ -1,0 +1,227 @@
+syntax = "proto3";
+
+package ose.datos.seguridad;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/any.proto";
+
+message ISesion {
+  string _id = 1;
+  string idUsuario = 2;
+  string token = 3;
+  optional string refreshToken = 4;
+  string fechaInicio = 5;
+  string fechaUltimaActividad = 6;
+  optional string fechaFin = 7;
+  string fechaExpiracion = 8;
+  string estado = 9;
+  string ip = 10;
+  optional string userAgent = 11;
+  optional string dispositivo = 12;
+  optional string ubicacion = 13;
+  optional string contextoOrganizacional = 14;
+}
+
+message ICreateSesion {
+  string idUsuario = 1;
+  string token = 2;
+  string fechaInicio = 3;
+  string fechaUltimaActividad = 4;
+  string fechaExpiracion = 5;
+  string estado = 6;
+  string ip = 7;
+  optional string refreshToken = 8;
+  optional string fechaFin = 9;
+  optional string userAgent = 10;
+  optional string dispositivo = 11;
+  optional string ubicacion = 12;
+  optional string contextoOrganizacional = 13;
+}
+
+message IUpdateSesion {
+  optional string idUsuario = 1;
+  optional string token = 2;
+  optional string refreshToken = 3;
+  optional string fechaInicio = 4;
+  optional string fechaUltimaActividad = 5;
+  optional string fechaFin = 6;
+  optional string fechaExpiracion = 7;
+  optional string estado = 8;
+  optional string ip = 9;
+  optional string userAgent = 10;
+  optional string dispositivo = 11;
+  optional string ubicacion = 12;
+  optional string contextoOrganizacional = 13;
+}
+
+message IPermisosModulos {
+  optional string clientes = 1;
+  optional string divisiones = 2;
+  optional string jefaturas = 3;
+  optional string distritos = 4;
+  optional string puntos_medicion = 5;
+  optional string relaciones_topologicas = 6;
+  optional string configuraciones_lectura = 7;
+  optional string lecturas = 8;
+  optional string fuentes_datos = 9;
+  optional string referencias_externas = 10;
+  optional string balances_hidricos = 11;
+  optional string anomalias = 12;
+  optional string series_temporales = 13;
+  optional string usuarios = 14;
+  optional string sesiones = 15;
+  optional string logs_auditoria = 16;
+  optional string configuracion_sistema = 17;
+  optional string notificaciones = 18;
+  optional string reglas_alerta = 19;
+  optional string registros_sincronizacion = 20;
+  optional string dashboard_operativo = 21;
+  optional string dashboard_gerencial = 22;
+  optional string reportes = 23;
+}
+
+message IPermisoUsuario {
+  string idCliente = 1;
+  optional string idDivision = 2;
+  optional string idJefatura = 3;
+  string alcance = 4;
+  repeated string roles = 5;
+  IPermisosModulos permisos = 6;
+  bool activo = 7;
+  string fechaAsignacion = 8;
+  optional string fechaExpiracion = 9;
+  optional string asignadoPor = 10;
+}
+
+message IUsuario {
+  string _id = 1;
+  string idCliente = 2;
+  optional string idDivision = 3;
+  optional string idJefatura = 4;
+  string nombreCompleto = 5;
+  string email = 6;
+  optional string username = 7;
+  string passwordHash = 8;
+  string permisos = 9;
+  string estado = 10;
+  optional string fechaUltimoAcceso = 11;
+  optional bool notificacionesEmail = 12;
+  optional bool notificacionesPush = 13;
+  optional string telefono = 14;
+  optional string fotoUrl = 15;
+  optional string fechaCreacion = 16;
+}
+
+message ICreateUsuario {
+  string idCliente = 1;
+  string nombreCompleto = 2;
+  string email = 3;
+  // Contraseña en texto plano (será hasheada por el servicio)
+  string password = 4;
+  optional string permisos = 5;
+  optional string estado = 6;
+  optional string idDivision = 7;
+  optional string idJefatura = 8;
+  optional string username = 9;
+  optional string fechaUltimoAcceso = 10;
+  optional bool notificacionesEmail = 11;
+  optional bool notificacionesPush = 12;
+  optional string telefono = 13;
+  optional string fotoUrl = 14;
+}
+
+message IUpdateUsuario {
+  optional string idCliente = 1;
+  optional string idDivision = 2;
+  optional string idJefatura = 3;
+  optional string nombreCompleto = 4;
+  optional string email = 5;
+  optional string username = 6;
+  // Contraseña en texto plano (será hasheada por el servicio)
+  optional string password = 7;
+  optional string permisos = 8;
+  optional string estado = 9;
+  optional string fechaUltimoAcceso = 10;
+  optional bool notificacionesEmail = 11;
+  optional bool notificacionesPush = 12;
+  optional string telefono = 13;
+  optional string fotoUrl = 14;
+}
+
+
+service SesionService {
+  rpc Create(ICreateSesion) returns (ISesion);
+  rpc Find(QueryRequest) returns (ISesionList);
+  rpc FindById(IdRequest) returns (ISesion);
+  rpc Update(UpdateSesionRequest) returns (ISesion);
+  rpc Delete(IdRequest) returns (DeleteResponse);
+}
+
+message UpdateSesionRequest {
+  string id = 1;
+  IUpdateSesion data = 2;
+}
+
+message ISesionList {
+  repeated ISesion items = 1;
+  int32 total = 2;
+}
+
+service UsuarioService {
+  rpc Create(ICreateUsuario) returns (IUsuario);
+  rpc Find(QueryRequest) returns (IUsuarioList);
+  rpc FindById(IdRequest) returns (IUsuario);
+  rpc Update(UpdateUsuarioRequest) returns (IUsuario);
+  rpc Delete(IdRequest) returns (DeleteResponse);
+  rpc FindByCliente(FindByClienteRequest) returns (IUsuarioArray);
+  rpc FindByEmail(FindByEmailRequest) returns (IUsuario);
+  rpc VerifyPassword(VerifyPasswordRequest) returns (VerifyPasswordResponse);
+}
+
+message UpdateUsuarioRequest {
+  string id = 1;
+  IUpdateUsuario data = 2;
+}
+
+message IUsuarioList {
+  repeated IUsuario items = 1;
+  int32 total = 2;
+}
+
+message QueryRequest {
+  optional string filter = 1;
+  optional int32 limit = 2;
+  optional int32 skip = 3;
+}
+
+message IdRequest {
+  string id = 1;
+}
+
+message DeleteResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message IUsuarioArray {
+  repeated IUsuario items = 1;
+}
+
+message FindByClienteRequest {
+  string idCliente = 1;
+}
+
+message FindByEmailRequest {
+  string email = 1;
+}
+
+message VerifyPasswordRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message VerifyPasswordResponse {
+  bool valid = 1;
+  optional IUsuario usuario = 2;
+}
