@@ -4,3 +4,4 @@ export * from './lectura';
 export * from './registro-sincronizacion';
 export * from './sistema-externo';
 export * from './regla-mapeo';
+export * from './dato-climatico';

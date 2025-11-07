@@ -7,6 +7,7 @@ export type TipoFuenteDatos =
   | 'gestion_comercial'  // Sistema de gestión comercial (ATLAS)
   | 'gis'                // Sistema de información geográfica
   | 'sensor_iot'         // Sensores IoT directos
+  | 'clima'              // Servicio meteorológico (Visual Crossing, INUMET, etc.)
   | 'manual'             // Carga manual
   | 'otro';              // Otros sistemas
 
