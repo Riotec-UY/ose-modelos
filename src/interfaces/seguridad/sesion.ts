@@ -6,7 +6,6 @@ export type EstadoSesion = 'activa' | 'cerrada' | 'expirada' | 'invalida';
 /**
  * Constante con todos los estados de sesión posibles
  */
-export const ESTADOS_SESION: EstadoSesion[] = ['activa', 'cerrada', 'expirada', 'invalida'];
 
 /**
  * Sesión

@@ -9,7 +9,6 @@ export type EstadoUsuario = 'activo' | 'inactivo' | 'suspendido';
 /**
  * Constante con todos los estados posibles
  */
-export const ESTADOS_USUARIO: EstadoUsuario[] = ['activo', 'inactivo', 'suspendido'];
 
 /**
  * Alcance (scope) del permiso

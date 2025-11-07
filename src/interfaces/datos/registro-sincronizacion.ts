@@ -12,19 +12,6 @@ export type TipoOperacionSincronizacion =
   | 'webhook'                // Evento push desde sistema externo
   | 'manual';                // Ejecución manual por operador
 
-/**
- * Array de tipos de operación (para iterar)
- */
-export const TIPOS_OPERACION_SINCRONIZACION: TipoOperacionSincronizacion[] = [
-  'ingesta_lecturas',
-  'ingesta_puntos',
-  'ingesta_infraestructura',
-  'reconciliacion',
-  'validacion',
-  'heartbeat',
-  'webhook',
-  'manual'
-];
 
 /**
  * Resultado de la sincronización

@@ -15,22 +15,6 @@ export type TipoTransformacion =
   | 'condicional'           // Condicional (if-then-else)
   | 'custom';               // Transformación custom (nombre de función)
 
-/**
- * Array de transformaciones (para iterar)
- */
-export const TIPOS_TRANSFORMACION: TipoTransformacion[] = [
-  'directo',
-  'convertir_tipo',
-  'mapeo_valores',
-  'formula',
-  'concatenar',
-  'extraer_subcadena',
-  'fecha_formato',
-  'lookup',
-  'constante',
-  'condicional',
-  'custom'
-];
 
 /**
  * Tipo de validación aplicable
@@ -46,20 +30,6 @@ export type TipoValidacion =
   | 'referencia_existe'     // Referencia a otra entidad existe
   | 'custom';               // Validación custom
 
-/**
- * Array de validaciones (para iterar)
- */
-export const TIPOS_VALIDACION: TipoValidacion[] = [
-  'requerido',
-  'tipo_dato',
-  'rango',
-  'longitud',
-  'regex',
-  'valores_permitidos',
-  'unico',
-  'referencia_existe',
-  'custom'
-];
 
 /**
  * Estrategia de actualización

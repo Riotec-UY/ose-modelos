@@ -8,14 +8,6 @@ export type TipoDatoClimatico =
   | 'pronostico'    // Predicción futura (forecast)
   | 'estadistico';  // Promedio histórico, climatología
 
-/**
- * Array de tipos para iteración en UIs
- */
-export const TIPOS_DATO_CLIMATICO: TipoDatoClimatico[] = [
-  'observado',
-  'pronostico',
-  'estadistico',
-];
 
 /**
  * Dato Climático

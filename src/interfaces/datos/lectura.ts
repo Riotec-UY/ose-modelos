@@ -25,22 +25,6 @@ export type TipoLectura =
   // Perforaciones (Pozos)
   | "Perforación Caudal";
 
-/**
- * Array de todos los tipos de lectura (para iteración en UIs)
- */
-export const TIPOS_LECTURA: TipoLectura[] = [
-  "Macromedidor Caudal",
-  "Macromedidor Presión",
-  "Medidor Residencial Consumo",
-  "Sensor Calidad Cloro",
-  "Sensor Calidad pH",
-  "Sensor Calidad Turbidez",
-  "Booster Presión Entrada",
-  "Booster Presión Salida",
-  "Booster Caudal",
-  "Depósito Nivel",
-  "Perforación Caudal",
-];
 
 /**
  * Calidad del dato

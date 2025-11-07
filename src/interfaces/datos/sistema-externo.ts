@@ -11,18 +11,6 @@ export type TipoSistemaExterno =
   | 'iot_platform'       // Plataforma IoT
   | 'otro';              // Otros
 
-/**
- * Array de tipos de sistema (para iterar)
- */
-export const TIPOS_SISTEMA_EXTERNO: TipoSistemaExterno[] = [
-  'scada',
-  'telemetria',
-  'gis',
-  'erp',
-  'database',
-  'iot_platform',
-  'otro'
-];
 
 /**
  * Protocolos de comunicación soportados
@@ -41,23 +29,6 @@ export type ProtocoloComunicacion =
   | 'webhook'            // Webhooks / Push notifications
   | 'otro';              // Otro protocolo
 
-/**
- * Array de protocolos (para iterar)
- */
-export const PROTOCOLOS_COMUNICACION: ProtocoloComunicacion[] = [
-  'api_rest',
-  'opc_ua',
-  'opc_da',
-  'mqtt',
-  'modbus',
-  'soap',
-  'graphql',
-  'websocket',
-  'database_direct',
-  'file_based',
-  'webhook',
-  'otro'
-];
 
 /**
  * Estado del sistema externo (catálogo general)
@@ -69,16 +40,6 @@ export type EstadoSistemaExterno =
   | 'deprecado'          // Deprecado (no usar en nuevas integraciones)
   | 'discontinuado';     // Discontinuado (producto fuera de soporte)
 
-/**
- * Array de estados (para iterar)
- */
-export const ESTADOS_SISTEMA_EXTERNO: EstadoSistemaExterno[] = [
-  'disponible',
-  'en_uso',
-  'mantenimiento',
-  'deprecado',
-  'discontinuado'
-];
 
 /**
  * Información de contacto/soporte

@@ -9,15 +9,6 @@ export type EstadoEstacionClimaticaVirtual =
   | 'error'         // Error en última sincronización (API falló)
   | 'inactiva';     // Desactivada permanentemente (sin puntos asociados)
 
-/**
- * Array de estados para iteración en UIs
- */
-export const ESTADOS_ESTACION_CLIMATICA_VIRTUAL: EstadoEstacionClimaticaVirtual[] = [
-  'activa',
-  'pausada',
-  'error',
-  'inactiva',
-];
 
 /**
  * Snapshot de última lectura climática

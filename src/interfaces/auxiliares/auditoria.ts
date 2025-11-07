@@ -23,7 +23,6 @@
  */
 export type MetodoAuditoria = 'post' | 'put' | 'delete';
 
-export const METODOS_AUDITORIA: MetodoAuditoria[] = ['post', 'put', 'delete'];
 
 /**
  * Tipos de entidades auditables

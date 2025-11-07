@@ -93,19 +93,3 @@ export interface IUpdateRelacionTopologica extends Omit<
   '_id' | 'idCliente' | 'idPuntoOrigen' | 'idPuntoDestino' | 'fechaCreacion' | 'puntoOrigen' | 'puntoDestino' | 'distrito'
 > {}
 
-/**
- * Array de tipos para iteración
- */
-export const TIPOS_RELACION_TOPOLOGICA: TipoRelacionTopologica[] = [
-  'alimenta_a',
-  'controla',
-  'pertenece_a_circuito',
-  'backup_de',
-  'paralelo_con',
-];
-
-export const ESTADOS_RELACION_TOPOLOGICA: EstadoRelacionTopologica[] = [
-  'activa',
-  'inactiva',
-  'desactivada',
-];

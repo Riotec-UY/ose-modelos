@@ -45,29 +45,6 @@ export type TipoPuntoMedicion =
   | TipoPuntoControl
   | TipoPuntoGenerico;
 
-/**
- * Array de todos los tipos (para iteración en UIs)
- */
-export const TIPOS_PUNTO_MEDICION: TipoPuntoMedicion[] = [
-  // Consumo
-  'residencial',
-  'comercial',
-  'industrial',
-  'institucional',
-  // Producción
-  'perforacion',
-  'planta_tratamiento',
-  'entrada_externa',
-  // Distribución
-  'booster',
-  'deposito',
-  'camara_valvulas',
-  // Control
-  'punto_control_distrito',
-  'interconexion',
-  // Genérico
-  'otro',
-];
 
 /**
  * Función en Balance Hídrico
@@ -141,12 +118,6 @@ export type MetodoSincronizacion =
   | 'on_change'   // Sistema externo notifica cambios (webhook/MQTT)
   | 'manual';     // Sincronización manual/bajo demanda
 
-export const METODOS_SINCRONIZACION: MetodoSincronizacion[] = [
-  'polling',
-  'push',
-  'on_change',
-  'manual',
-];
 
 /**
  * Estados de una configuración de integración
@@ -157,12 +128,6 @@ export type EstadoConfiguracionIntegracion =
   | 'error'            // Error en última sincronización
   | 'desactivada';     // Desactivada permanentemente
 
-export const ESTADOS_CONFIGURACION_INTEGRACION: EstadoConfiguracionIntegracion[] = [
-  'activa',
-  'pausada',
-  'error',
-  'desactivada',
-];
 
 /**
  * Mapeo de una variable externa a un tipo de lectura canónico

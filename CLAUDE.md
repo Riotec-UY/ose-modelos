@@ -26,19 +26,21 @@ export function validarCliente() {}
 // ✅ CORRECTO - Union types
 export type TipoPuntoMedicion = 'residencial' | 'booster' | 'perforación';
 
-// Array de constantes para iterar
-export const TIPOS_PUNTO_MEDICION: TipoPuntoMedicion[] = [
-  'residencial',
-  'booster',
-  'perforación'
-];
-
 // ❌ INCORRECTO - Enum tradicional
 export enum TipoPuntoMedicion {
   Residencial = 'residencial',
   Booster = 'booster'
 }
+
+// ❌ INCORRECTO - Arrays const (requieren compilación)
+export const TIPOS_PUNTO_MEDICION: TipoPuntoMedicion[] = [
+  'residencial',
+  'booster',
+  'perforación'
+];
 ```
+
+**IMPORTANTE:** Este paquete NO se compila. Los `const` arrays no funcionan en runtime cuando otros proyectos importan directamente desde `.ts`. Si necesitas arrays para iteración (UI dropdowns, etc.), créalos en el repo consumidor.
 
 ### 3. Metadatos Flexibles con Record<string, any>
 ```typescript
@@ -171,13 +173,12 @@ src/
 - ❌ Usar `class`
 - ❌ Usar `enum` tradicional
 - ❌ Crear funciones
-- ❌ Usar `const` para valores complejos (solo para arrays de types)
+- ❌ Usar `const` (arrays, objetos, valores - requieren compilación)
 - ❌ Importar librerías externas (excepto types de otras librerías)
 
 ### Sí se puede hacer:
 - ✅ `interface`
 - ✅ `type` (union types, mapped types, etc.)
-- ✅ `const` para arrays de union types
 - ✅ `Record<string, any>` para flexibilidad
 - ✅ Generics (`<T extends X>`)
 - ✅ Utility types (`Omit`, `Partial`, `Pick`, etc.)
@@ -195,8 +196,7 @@ src/
 import {
   IPuntoMedicion,
   ILectura,
-  TipoPuntoMedicion,
-  TIPOS_PUNTO_MEDICION
+  TipoPuntoMedicion
 } from 'ose-modelos';
 
 // Type-safe desde el modelo hasta el frontend
@@ -206,6 +206,15 @@ const punto: IPuntoMedicion = {
   nombre: 'Medidor Juan Pérez',
   // TypeScript valida todo
 };
+
+// Si necesitas arrays para iterar, créalos localmente:
+// frontend-angular/src/app/shared/constants/tipos-punto.ts
+const TIPOS_PUNTO_MEDICION: TipoPuntoMedicion[] = [
+  'residencial',
+  'booster',
+  'perforacion'
+  // ... resto de tipos
+];
 ```
 
 ## ⚠️ IMPORTANTE para Claude
