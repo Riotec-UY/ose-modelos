@@ -344,7 +344,7 @@ export interface IPuntoMedicion {
 
   // Metadatos técnicos flexibles
   // Varían según tipo de punto (ver ejemplos en documentación)
-  metadatosTecnicos?: IMetadatosTecnicos;
+  metadatosTecnicos?: Record<string, any>;
 
   // Auditoría
   // Auditoría simple (patrón GAS/INSIDE)

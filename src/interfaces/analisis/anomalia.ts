@@ -1,3 +1,4 @@
+import { ICoordenadas } from '../auxiliares/coordenadas';
 
 /**
  * Tipo de anomalía detectada

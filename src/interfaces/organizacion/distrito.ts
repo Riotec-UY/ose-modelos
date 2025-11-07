@@ -1,3 +1,4 @@
+import { IGeoJSON } from '../auxiliares/geojson';
 
 /**
  * Distrito Pitométrico - Zona de balance hídrico

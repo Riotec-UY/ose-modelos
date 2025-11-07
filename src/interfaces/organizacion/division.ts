@@ -1,4 +1,11 @@
 /**
+ * Tipo de división
+ * - region: División organizacional estándar
+ * - ugd: Unidad de Gestión Descentralizada (con mayor autonomía)
+ */
+export type TipoDivision = 'region' | 'ugd';
+
+/**
  * División - Unidad operacional del cliente
  *
  * Representa una división operativa dentro del cliente.
@@ -16,6 +23,7 @@
 export interface IDivision {
   _id?: string;
   idCliente: string;                 // Referencia a Cliente
+  tipo: TipoDivision;                // Tipo: 'region' o 'ugd'
   nombre: string;                    // ej: "UGD Maldonado"
   codigo?: string;                   // Código interno único
   descripcion?: string;              // Descripción de la división
@@ -34,6 +42,7 @@ export interface IDivision {
  */
 export interface ICreateDivision extends Omit<Partial<IDivision>, '_id' | 'cliente' | 'fechaCreacion'> {
   idCliente: string; // Requerido
+  tipo: TipoDivision; // Requerido
   nombre: string;    // Requerido
 }
 

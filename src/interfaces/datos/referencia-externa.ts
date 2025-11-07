@@ -52,7 +52,6 @@ export interface IReferenciaExterna {
 
   // Estado y validación
   estado: EstadoReferenciaExterna;
-  fechaCreacion?: string;            // ISO 8601
   fechaUltimaVerificacion?: string;  // ISO 8601 (última vez que se verificó la existencia)
 
   // Metadatos adicionales
