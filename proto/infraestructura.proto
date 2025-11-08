@@ -5,6 +5,7 @@ package ose.datos.infraestructura;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/any.proto";
+import "auxiliares.proto";
 
 message ISnapshotClimatico {
   string timestamp = 1;
@@ -255,7 +256,7 @@ message IUpdateRelacionTopologica {
 
 message IUbicacionGeografica {
   google.protobuf.Struct geojson = 1;
-  optional ICoordenadas coordenadas = 2;
+  optional ose.datos.auxiliares.ICoordenadas coordenadas = 2;
   optional string direccionPostal = 3;
   optional string ciudad = 4;
   optional string departamento = 5;
