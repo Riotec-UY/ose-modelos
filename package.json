@@ -1,7 +1,7 @@
 {
   "name": "ose-modelos",
-  "version": "2.0.0",
-  "description": "Modelos canónicos para el sistema OSE Aguas - Distrito Pitométrico Inteligente",
+  "version": "2.1.0",
+  "description": "Modelos canónicos para el sistema OSE Aguas - Solo interfaces TypeScript (sin compilación)",
   "author": "RIOTEC",
   "license": "Private",
   "repository": {
@@ -11,15 +11,6 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "files": [
-    "src",
-    "proto",
-    "scripts"
-  ],
-  "scripts": {
-    "proto:generate": "node scripts/generate-proto-v2.js"
-  },
-  "dependencies": {
-    "ose-modelos": "file:",
-    "ts-morph": "^27.0.2"
-  }
+    "src"
+  ]
 }
