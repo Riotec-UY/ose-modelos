@@ -1,0 +1,28 @@
+{
+  "infraestructura": {
+    "punto-medicion": {
+      "fieldTransforms": {
+        "ubicacion": {
+          "from": "IUbicacionGeografica",
+          "to": "string",
+          "comment": "JSON string de IUbicacionGeografica"
+        },
+        "configuracionesLectura": {
+          "from": "IConfiguracionLectura[]",
+          "to": "string",
+          "comment": "JSON string array de IConfiguracionLectura"
+        },
+        "configuracionIntegracion": {
+          "from": "IConfiguracionIntegracion",
+          "to": "string",
+          "comment": "JSON string de IConfiguracionIntegracion"
+        },
+        "metadatosTecnicos": {
+          "from": "Record<string, any>",
+          "to": "string",
+          "comment": "JSON string de metadatos"
+        }
+      }
+    }
+  }
+}

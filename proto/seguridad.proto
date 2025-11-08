@@ -208,8 +208,6 @@ service UsuarioService {
   rpc Create(ICreateUsuario) returns (IUsuario);
   rpc Find(QueryRequest) returns (IUsuarioList);
   rpc FindById(IdRequest) returns (IUsuario);
-  rpc FindByEmail(EmailRequest) returns (IUsuario);
-  rpc VerifyPassword(VerifyPasswordRequest) returns (VerifyPasswordResponse);
   rpc Update(UpdateUsuarioRequest) returns (IUsuario);
   rpc Delete(IdRequest) returns (DeleteResponse);
 }
@@ -232,20 +230,6 @@ message QueryRequest {
 
 message IdRequest {
   string id = 1;
-}
-
-message EmailRequest {
-  string email = 1;
-}
-
-message VerifyPasswordRequest {
-  string email = 1;
-  string password = 2;
-}
-
-message VerifyPasswordResponse {
-  bool valid = 1;
-  optional IUsuario usuario = 2;
 }
 
 message DeleteResponse {

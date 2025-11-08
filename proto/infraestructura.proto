@@ -5,7 +5,6 @@ package ose.datos.infraestructura;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/any.proto";
-import "auxiliares.proto";
 
 message ISnapshotClimatico {
   string timestamp = 1;
@@ -28,7 +27,7 @@ message IEstacionClimaticaVirtual {
   string nombre = 5;
   optional string codigo = 6;
   optional string descripcion = 7;
-  IUbicacionGeografica ubicacion = 8;
+  string ubicacion = 8;
   double radioCoberturaKm = 9;
   string idFuenteDatos = 10;
   double frecuenciaPollingMinutos = 11;
@@ -52,7 +51,7 @@ message IEstacionClimaticaVirtual {
 message ICreateEstacionClimaticaVirtual {
   string idCliente = 1;
   string nombre = 2;
-  IUbicacionGeografica ubicacion = 3;
+  string ubicacion = 3;
   double radioCoberturaKm = 4;
   string idFuenteDatos = 5;
   double frecuenciaPollingMinutos = 6;
@@ -78,7 +77,7 @@ message IUpdateEstacionClimaticaVirtual {
   optional string nombre = 8;
   optional string codigo = 9;
   optional string descripcion = 10;
-  optional IUbicacionGeografica ubicacion = 11;
+  optional string ubicacion = 11;
   optional double radioCoberturaKm = 12;
   optional string idFuenteDatos = 13;
   optional double frecuenciaPollingMinutos = 14;
@@ -149,11 +148,11 @@ message IPuntoMedicion {
   optional string codigo = 7;
   string tipo = 8;
   string funcionBalanceHidrico = 9;
-  IUbicacionGeografica ubicacion = 10;
+  string ubicacion = 10;
   string estado = 11;
   optional string fechaInstalacion = 12;
   optional string fechaDesactivacion = 13;
-  repeated IConfiguracionLectura configuracionesLectura = 14;
+  string configuracionesLectura = 14;
   optional IConfiguracionIntegracion configuracionIntegracion = 15;
   optional google.protobuf.Struct ultimaLecturaPorTipo = 16;
   optional google.protobuf.Struct metadatosTecnicos = 17;
@@ -169,9 +168,9 @@ message ICreatePuntoMedicion {
   string nombre = 2;
   string tipo = 3;
   string funcionBalanceHidrico = 4;
-  IUbicacionGeografica ubicacion = 5;
+  string ubicacion = 5;
   string estado = 6;
-  repeated IConfiguracionLectura configuracionesLectura = 7;
+  string configuracionesLectura = 7;
   optional string idDivision = 8;
   optional string idJefatura = 9;
   optional string idDistrito = 10;
@@ -192,11 +191,11 @@ message IUpdatePuntoMedicion {
   optional string codigo = 7;
   optional string tipo = 8;
   optional string funcionBalanceHidrico = 9;
-  optional IUbicacionGeografica ubicacion = 10;
+  optional string ubicacion = 10;
   optional string estado = 11;
   optional string fechaInstalacion = 12;
   optional string fechaDesactivacion = 13;
-  repeated IConfiguracionLectura configuracionesLectura = 14;
+  optional string configuracionesLectura = 14;
   optional IConfiguracionIntegracion configuracionIntegracion = 15;
   optional google.protobuf.Struct metadatosTecnicos = 16;
 }
@@ -256,7 +255,7 @@ message IUpdateRelacionTopologica {
 
 message IUbicacionGeografica {
   google.protobuf.Struct geojson = 1;
-  optional ose.datos.auxiliares.ICoordenadas coordenadas = 2;
+  optional ICoordenadas coordenadas = 2;
   optional string direccionPostal = 3;
   optional string ciudad = 4;
   optional string departamento = 5;
