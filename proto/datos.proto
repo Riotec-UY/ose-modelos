@@ -5,7 +5,6 @@ package ose.datos.datos;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/any.proto";
-import "auxiliares.proto";
 
 message IDatoClimatico {
   optional string _id = 1;
@@ -193,7 +192,7 @@ message ILecturaBase {
   string tipoLectura = 4;
   string valores = 5;
   string calidadDato = 6;
-  optional ose.datos.auxiliares.IMetadatosDeOrigen metadatosOrigen = 7;
+  optional IMetadatosDeOrigen metadatosOrigen = 7;
   optional string fechaCreacion = 8;
   optional string expireAt = 9;
   optional google.protobuf.Any puntoMedicion = 10;
@@ -206,7 +205,7 @@ message ICreateLectura {
   string tipoLectura = 3;
   string valores = 4;
   string calidadDato = 5;
-  optional ose.datos.auxiliares.IMetadatosDeOrigen metadatosOrigen = 6;
+  optional IMetadatosDeOrigen metadatosOrigen = 6;
   optional string expireAt = 7;
 }
 
@@ -214,7 +213,7 @@ message IUpdateLectura {
   optional string fechaCreacion = 1;
   optional string valores = 2;
   optional string calidadDato = 3;
-  optional ose.datos.auxiliares.IMetadatosDeOrigen metadatosOrigen = 4;
+  optional IMetadatosDeOrigen metadatosOrigen = 4;
   optional string expireAt = 5;
 }
 
@@ -226,7 +225,7 @@ message IReferenciaExterna {
   optional string tipoExterno = 5;
   string estado = 6;
   optional string fechaUltimaVerificacion = 7;
-  optional string metadatosAdicionales = 8;  // JSON string
+  optional google.protobuf.Struct metadatosAdicionales = 8;
   optional string fechaCreacion = 9;
 }
 
@@ -237,7 +236,7 @@ message ICreateReferenciaExterna {
   string estado = 4;
   optional string tipoExterno = 5;
   optional string fechaUltimaVerificacion = 6;
-  optional string metadatosAdicionales = 7;  // JSON string
+  optional google.protobuf.Struct metadatosAdicionales = 7;
 }
 
 message IUpdateReferenciaExterna {
@@ -247,7 +246,36 @@ message IUpdateReferenciaExterna {
   optional string tipoExterno = 4;
   optional string estado = 5;
   optional string fechaUltimaVerificacion = 6;
-  optional string metadatosAdicionales = 7;  // JSON string
+  optional google.protobuf.Struct metadatosAdicionales = 7;
+}
+
+message IErrorSincronizacion {
+  string timestamp = 1;
+  string tipo = 2;
+  string mensaje = 3;
+  optional string codigoError = 4;
+  optional string entidadAfectada = 5;
+  optional google.protobuf.Struct contexto = 6;
+}
+
+message IEstadisticasSincronizacion {
+  optional double totalRegistrosOrigen = 1;
+  double registrosProcesados = 2;
+  double registrosCreados = 3;
+  double registrosActualizados = 4;
+  double registrosSinCambios = 5;
+  double registrosConErrores = 6;
+  optional double registrosIgnorados = 7;
+  optional double porcentajeExito = 8;
+  optional double tasaError = 9;
+  double duracionMs = 10;
+  optional double duracionPromedioRegistroMs = 11;
+  optional double lecturasValidas = 12;
+  optional double lecturasSospechosas = 13;
+  optional double lecturasError = 14;
+  optional double puntosConNuevosValores = 15;
+  optional double puntosSinComunicacion = 16;
+  optional google.protobuf.Struct otros = 17;
 }
 
 message IRegistroSincronizacion {
@@ -259,14 +287,14 @@ message IRegistroSincronizacion {
   optional string timestampFin = 6;
   string resultado = 7;
   optional string mensajeResultado = 8;
-  string estadisticas = 9;  // JSON string: IEstadisticasSincronizacion
-  optional string errores = 10;  // JSON array: IErrorSincronizacion[]
+  IEstadisticasSincronizacion estadisticas = 9;
+  repeated IErrorSincronizacion errores = 10;
   optional double erroresCriticos = 11;
   optional double erroresTotales = 12;
   optional string usuarioEjecucion = 13;
   optional bool esManual = 14;
-  optional string parametros = 15;  // JSON string
-  optional string metadatosAdicionales = 16;  // JSON string
+  optional google.protobuf.Struct parametros = 15;
+  optional google.protobuf.Struct metadatosAdicionales = 16;
   optional string fechaCreacion = 17;
   optional google.protobuf.Any cliente = 18;
   optional google.protobuf.Any fuenteDatos = 19;
@@ -279,30 +307,30 @@ message ICreateRegistroSincronizacion {
   string tipoOperacion = 3;
   string timestampInicio = 4;
   string resultado = 5;
-  string estadisticas = 6;  // JSON string: IEstadisticasSincronizacion
+  IEstadisticasSincronizacion estadisticas = 6;
   optional string timestampFin = 7;
   optional string mensajeResultado = 8;
-  optional string errores = 9;  // JSON array: IErrorSincronizacion[]
+  repeated IErrorSincronizacion errores = 9;
   optional double erroresCriticos = 10;
   optional double erroresTotales = 11;
   optional string usuarioEjecucion = 12;
   optional bool esManual = 13;
-  optional string parametros = 14;  // JSON string
-  optional string metadatosAdicionales = 15;  // JSON string
+  optional google.protobuf.Struct parametros = 14;
+  optional google.protobuf.Struct metadatosAdicionales = 15;
 }
 
 message IUpdateRegistroSincronizacion {
   optional string timestampFin = 1;
   optional string resultado = 2;
   optional string mensajeResultado = 3;
-  optional string estadisticas = 4;  // JSON string: IEstadisticasSincronizacion
-  optional string errores = 5;  // JSON array: IErrorSincronizacion[]
+  optional IEstadisticasSincronizacion estadisticas = 4;
+  repeated IErrorSincronizacion errores = 5;
   optional double erroresCriticos = 6;
   optional double erroresTotales = 7;
   optional string usuarioEjecucion = 8;
   optional bool esManual = 9;
-  optional string parametros = 10;  // JSON string
-  optional string metadatosAdicionales = 11;  // JSON string
+  optional google.protobuf.Struct parametros = 10;
+  optional google.protobuf.Struct metadatosAdicionales = 11;
 }
 
 message IMapaCampo {
@@ -334,8 +362,8 @@ message IReglaMapeo {
   optional bool activo = 6;
   string tipoOrigen = 7;
   string tipoDestino = 8;
-  string mapasCampos = 9;  // JSON string
-  optional string validaciones = 10;  // JSON string
+  repeated IMapaCampo mapasCampos = 9;
+  repeated IReglaValidacion validaciones = 10;
   string estrategiaActualizacion = 11;
   optional double prioridad = 12;
   optional string filtroOrigen = 13;
@@ -355,11 +383,11 @@ message ICreateReglaMapeo {
   string nombre = 3;
   string tipoOrigen = 4;
   string tipoDestino = 5;
-  string mapasCampos = 6;  // JSON string
+  repeated IMapaCampo mapasCampos = 6;
   string estrategiaActualizacion = 7;
   optional string descripcion = 8;
   optional bool activo = 9;
-  optional string validaciones = 10;  // JSON string
+  repeated IReglaValidacion validaciones = 10;
   optional double prioridad = 11;
   optional string filtroOrigen = 12;
   optional string campoIdentificador = 13;
@@ -375,8 +403,8 @@ message IUpdateReglaMapeo {
   optional bool activo = 3;
   optional string tipoOrigen = 4;
   optional string tipoDestino = 5;
-  optional string mapasCampos = 6;  // JSON string
-  optional string validaciones = 7;  // JSON string
+  repeated IMapaCampo mapasCampos = 6;
+  repeated IReglaValidacion validaciones = 7;
   optional string estrategiaActualizacion = 8;
   optional double prioridad = 9;
   optional string filtroOrigen = 10;

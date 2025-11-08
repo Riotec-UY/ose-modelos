@@ -5,7 +5,6 @@ package ose.datos.analisis;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/any.proto";
-import "auxiliares.proto";
 
 message IAnomalia {
   optional string _id = 1;
@@ -20,7 +19,7 @@ message IAnomalia {
   string momentoDeteccion = 10;
   string descripcion = 11;
   optional string metodoDeteccion = 12;
-  optional string ubicacionEstimada = 13;  // JSON string: ICoordenadas
+  optional ICoordenadas ubicacionEstimada = 13;
   optional string referenciaUbicacion = 14;
   optional double perdidaEstimada = 15;
   optional double poblacionAfectada = 16;
@@ -49,7 +48,7 @@ message ICreateAnomalia {
   optional string idDistrito = 9;
   optional string idPuntoMedicion = 10;
   optional string metodoDeteccion = 11;
-  optional string ubicacionEstimada = 12;  // JSON string: ICoordenadas
+  optional ICoordenadas ubicacionEstimada = 12;
   optional string referenciaUbicacion = 13;
   optional double perdidaEstimada = 14;
   optional double poblacionAfectada = 15;
@@ -72,7 +71,7 @@ message IUpdateAnomalia {
   optional string momentoDeteccion = 9;
   optional string descripcion = 10;
   optional string metodoDeteccion = 11;
-  optional string ubicacionEstimada = 12;  // JSON string: ICoordenadas
+  optional ICoordenadas ubicacionEstimada = 12;
   optional string referenciaUbicacion = 13;
   optional double perdidaEstimada = 14;
   optional double poblacionAfectada = 15;

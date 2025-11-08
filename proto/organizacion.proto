@@ -162,7 +162,6 @@ service DistritoService {
   rpc FindById(IdRequest) returns (IDistrito);
   rpc Update(UpdateDistritoRequest) returns (IDistrito);
   rpc Delete(IdRequest) returns (DeleteResponse);
-  rpc FindByJefatura(FindByJefaturaRequest) returns (IDistritoArray);
 }
 
 message UpdateDistritoRequest {
@@ -199,7 +198,6 @@ service JefaturaService {
   rpc FindById(IdRequest) returns (IJefatura);
   rpc Update(UpdateJefaturaRequest) returns (IJefatura);
   rpc Delete(IdRequest) returns (DeleteResponse);
-  rpc FindByDivision(FindByDivisionRequest) returns (IJefaturaArray);
 }
 
 message UpdateJefaturaRequest {
@@ -225,20 +223,4 @@ message IdRequest {
 message DeleteResponse {
   bool success = 1;
   string message = 2;
-}
-
-message IJefaturaArray {
-  repeated IJefatura items = 1;
-}
-
-message FindByDivisionRequest {
-  string idDivision = 1;
-}
-
-message IDistritoArray {
-  repeated IDistrito items = 1;
-}
-
-message FindByJefaturaRequest {
-  string idJefatura = 1;
 }

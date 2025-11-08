@@ -138,7 +138,7 @@ export interface IUsuario {
   username?: string;
 
   /** Hash de contraseña (bcrypt, argon2, etc.) - nunca almacenar en texto plano */
-  passwordHash: string;
+  passwordHash?: string;
 
   /**
    * Array de permisos embebidos (NO referencias!)
@@ -187,3 +187,20 @@ export interface IUsuario {
   // Auditoría simple (patrón GAS/INSIDE)
   fechaCreacion?: string;  // Auto-generado (ISO 8601), inmutable
 }
+
+/**
+ * DTO para crear un usuario
+ */
+export interface ICreateUsuario extends Omit<Partial<IUsuario>, '_id' | 'fechaCreacion'> {
+  idCliente: string; // Requerido
+  nombreCompleto: string; // Requerido
+  email: string; // Requerido
+  passwordHash: string; // Requerido
+  permisos: IPermisoUsuario[]; // Requerido
+  estado: EstadoUsuario; // Requerido
+}
+
+/**
+ * DTO para actualizar un usuario
+ */
+export interface IUpdateUsuario extends Omit<Partial<IUsuario>, '_id' | 'fechaCreacion'> {}

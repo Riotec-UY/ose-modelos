@@ -75,3 +75,21 @@ export interface ISesion {
     idJefatura?: string;
   };
 }
+
+/**
+ * DTO para crear una sesión
+ */
+export interface ICreateSesion extends Omit<Partial<ISesion>, '_id'> {
+  idUsuario: string; // Requerido
+  token: string; // Requerido
+  fechaInicio: string; // Requerido
+  fechaUltimaActividad: string; // Requerido
+  fechaExpiracion: string; // Requerido
+  estado: EstadoSesion; // Requerido
+  ip: string; // Requerido
+}
+
+/**
+ * DTO para actualizar una sesión
+ */
+export interface IUpdateSesion extends Omit<Partial<ISesion>, '_id'> {}

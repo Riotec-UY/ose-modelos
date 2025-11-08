@@ -19,6 +19,7 @@
     "proto:generate": "node scripts/generate-proto-v2.js"
   },
   "dependencies": {
-    "ose-modelos": "file:"
+    "ose-modelos": "file:",
+    "ts-morph": "^27.0.2"
   }
 }

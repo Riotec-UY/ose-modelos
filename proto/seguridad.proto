@@ -6,6 +6,44 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/any.proto";
 
+message IClient {
+  string id = 1;
+  string clientSecret = 2;
+  repeated string grants = 3;
+  repeated string redirectUris = 4;
+  optional double accessTokenLifetime = 5;
+  optional double refreshTokenLifetime = 6;
+}
+
+message ICreateClient {
+  string id = 1;
+  string clientSecret = 2;
+  repeated string grants = 3;
+  repeated string redirectUris = 4;
+  optional double accessTokenLifetime = 5;
+  optional double refreshTokenLifetime = 6;
+}
+
+message IToken {
+  string accessToken = 1;
+  optional string accessTokenExpiresAt = 2;
+  optional string refreshToken = 3;
+  optional string refreshTokenExpiresAt = 4;
+  optional IClient client = 5;
+  optional google.protobuf.Any user = 6;
+  repeated string scope = 7;
+}
+
+message ICreateToken {
+  string accessToken = 1;
+  string accessTokenExpiresAt = 2;
+  string refreshToken = 3;
+  string refreshTokenExpiresAt = 4;
+  IClient client = 5;
+  google.protobuf.Any user = 6;
+  repeated string scope = 7;
+}
+
 message ISesion {
   string _id = 1;
   string idUsuario = 2;
@@ -102,8 +140,8 @@ message IUsuario {
   string nombreCompleto = 5;
   string email = 6;
   optional string username = 7;
-  string passwordHash = 8;
-  string permisos = 9;
+  optional string passwordHash = 8;
+  repeated IPermisoUsuario permisos = 9;
   string estado = 10;
   optional string fechaUltimoAcceso = 11;
   optional bool notificacionesEmail = 12;
@@ -117,10 +155,9 @@ message ICreateUsuario {
   string idCliente = 1;
   string nombreCompleto = 2;
   string email = 3;
-  // Contraseña en texto plano (será hasheada por el servicio)
-  string password = 4;
-  optional string permisos = 5;
-  optional string estado = 6;
+  string passwordHash = 4;
+  repeated IPermisoUsuario permisos = 5;
+  string estado = 6;
   optional string idDivision = 7;
   optional string idJefatura = 8;
   optional string username = 9;
@@ -138,9 +175,8 @@ message IUpdateUsuario {
   optional string nombreCompleto = 4;
   optional string email = 5;
   optional string username = 6;
-  // Contraseña en texto plano (será hasheada por el servicio)
-  optional string password = 7;
-  optional string permisos = 8;
+  optional string passwordHash = 7;
+  repeated IPermisoUsuario permisos = 8;
   optional string estado = 9;
   optional string fechaUltimoAcceso = 10;
   optional bool notificacionesEmail = 11;
@@ -174,9 +210,6 @@ service UsuarioService {
   rpc FindById(IdRequest) returns (IUsuario);
   rpc Update(UpdateUsuarioRequest) returns (IUsuario);
   rpc Delete(IdRequest) returns (DeleteResponse);
-  rpc FindByCliente(FindByClienteRequest) returns (IUsuarioArray);
-  rpc FindByEmail(FindByEmailRequest) returns (IUsuario);
-  rpc VerifyPassword(VerifyPasswordRequest) returns (VerifyPasswordResponse);
 }
 
 message UpdateUsuarioRequest {
@@ -202,26 +235,4 @@ message IdRequest {
 message DeleteResponse {
   bool success = 1;
   string message = 2;
-}
-
-message IUsuarioArray {
-  repeated IUsuario items = 1;
-}
-
-message FindByClienteRequest {
-  string idCliente = 1;
-}
-
-message FindByEmailRequest {
-  string email = 1;
-}
-
-message VerifyPasswordRequest {
-  string email = 1;
-  string password = 2;
-}
-
-message VerifyPasswordResponse {
-  bool valid = 1;
-  optional IUsuario usuario = 2;
 }

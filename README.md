@@ -73,6 +73,68 @@ import {
 const tipo: TipoPuntoMedicion = 'residencial';
 ```
 
+## 🔗 Integración con Mongoose (ose-datos)
+
+### Patrón `Exactly<T, U>` para Type-Safety
+
+Para garantizar que los Mongoose schemas coincidan exactamente con las interfaces del modelo, se utiliza el tipo utilitario `Exactly<T, U>`:
+
+```typescript
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+import type { ICliente, Exactly } from 'ose-modelos/src';
+
+@Schema({
+  collection: 'clientes',
+  timestamps: false,
+  versionKey: false,
+})
+export class Cliente implements Exactly<ICliente, Cliente> {
+  _id: string;  // Declarado explícitamente
+
+  @Prop({ required: true, trim: true })
+  nombre: string;
+
+  @Prop({ trim: true, unique: true, sparse: true })
+  codigo?: string;
+
+  @Prop({ default: false })
+  tenantSemilla?: boolean;
+
+  @Prop({ default: true })
+  activo?: boolean;
+
+  @Prop({ type: Object })
+  configuracion?: Record<string, any>;
+
+  @Prop({ required: true, default: () => new Date().toISOString() })
+  fechaCreacion?: string;
+}
+
+export type ClienteDocument = Cliente & Document;
+export const ClienteSchema = SchemaFactory.createForClass(Cliente);
+```
+
+### Ventajas del patrón Exactly
+
+1. **Type-safety en compile-time**: TypeScript detecta discrepancias entre la interfaz y el schema
+2. **Documentación implícita**: El schema es la implementación exacta de la interfaz
+3. **Evita drift**: Cambios en el modelo fuerzan actualización del schema
+4. **Sin imports runtime**: Se usa `import type` para evitar imports en JavaScript compilado
+
+### Reglas de Implementación
+
+1. **Import type-only**: Usar `import type { ... } from 'ose-modelos/src'`
+2. **_id explícito**: Declarar `_id: string` en la clase del schema
+3. **Document como composición**: Usar `type ClienteDocument = Cliente & Document` en lugar de extender
+4. **Tipos exactos**: Usar tipos del modelo (`TipoDivision`, `EstadoUsuario`, etc.) en los decoradores
+
+### ⚠️ Importante
+
+- Los schemas **NO** deben importar valores en runtime de `ose-modelos` (causaría errores en Docker)
+- Solo usar **type imports** que se borran en compilación
+- Los enums deben especificarse como arrays literales en los decoradores `@Prop()`
+
 ## 📖 Documentación del Modelo
 
 ### Para Stakeholders No Técnicos

@@ -9,3 +9,6 @@ export * from './tipos-permisos';
 
 // Sesiones
 export * from './sesion';
+
+// OAuth2
+export * from './oauth';
