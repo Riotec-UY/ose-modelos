@@ -186,12 +186,15 @@ export interface IUsuario {
   /** Metadatos de auditoría (creación, modificación) */
   // Auditoría simple (patrón GAS/INSIDE)
   fechaCreacion?: string;  // Auto-generado (ISO 8601), inmutable
+
+  // Virtuals (populados por query)
+  cliente?: any; // ICliente (evitamos import circular)
 }
 
 /**
  * DTO para crear un usuario
  */
-export interface ICreateUsuario extends Omit<Partial<IUsuario>, '_id' | 'fechaCreacion'> {
+export interface ICreateUsuario extends Omit<Partial<IUsuario>, '_id' | 'cliente' | 'fechaCreacion'> {
   idCliente: string; // Requerido
   nombreCompleto: string; // Requerido
   email: string; // Requerido
@@ -203,4 +206,4 @@ export interface ICreateUsuario extends Omit<Partial<IUsuario>, '_id' | 'fechaCr
 /**
  * DTO para actualizar un usuario
  */
-export interface IUpdateUsuario extends Omit<Partial<IUsuario>, '_id' | 'fechaCreacion'> {}
+export interface IUpdateUsuario extends Omit<Partial<IUsuario>, '_id' | 'cliente' | 'fechaCreacion'> {}
