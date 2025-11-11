@@ -67,6 +67,122 @@ export type EstadoPuntoMedicion =
   | 'inactivo';      // Desactivado permanentemente
 
 // ==========================================
+// CARACTERÍSTICAS DE TUBERÍA
+// ==========================================
+
+/**
+ * Categoría jerárquica de tubería según función en la red
+ * Basado en terminología OSE: Principal → Ramal → Conexión
+ */
+export type CategoriaTuberia =
+  | 'conduccion'   // Nivel 0: Grandes conducciones (fuente → planta, grandes distancias)
+  | 'principal'    // Nivel 1: Tubería principal/troncal (columna vertebral, distribución primaria)
+  | 'ramal'        // Nivel 2: Ramales secundarios (se desprenden de principal, distribución secundaria)
+  | 'conexion';    // Nivel 3: Conexión/acometida domiciliaria
+
+/**
+ * Material de construcción de la tubería
+ */
+export type MaterialTuberia =
+  | 'pvc'              // Policloruro de vinilo (más común en instalaciones modernas)
+  | 'polietileno'      // PE, PEAD (común en conexiones)
+  | 'hierro_fundido'   // Tuberías antiguas, alta rugosidad
+  | 'acero'            // Impulsión, altas presiones
+  | 'hormigon'         // Grandes conducciones
+  | 'fibrocemento'     // Antiguo (amianto, en desuso)
+  | 'otro';            // Otros materiales
+
+/**
+ * Estado de conservación de la tubería
+ */
+export type EstadoConservacion =
+  | 'nuevo'           // <5 años o recién instalado
+  | 'bueno'           // Funcional, sin problemas visibles
+  | 'regular'         // Señales de desgaste, requiere monitoreo
+  | 'malo'            // Deteriorado, requiere intervención
+  | 'critico'         // Fin de vida útil, reemplazo urgente
+  | 'desconocido';    // Sin información de estado
+
+/**
+ * Función especial de la tubería (opcional)
+ */
+export type FuncionEspecialTuberia =
+  | 'impulsion'       // Tubería desde booster (alta presión)
+  | 'interconexion'   // Entre zonas de presión diferentes
+  | 'bypass';         // Tubería de bypass/emergencia
+
+/**
+ * Características de la tubería donde está instalado el punto de medición
+ *
+ * Representa las propiedades físicas y operacionales de la tubería EN LA QUE
+ * está instalado este punto de medición.
+ *
+ * Concepto: Cada PuntoMedición se instala EN una tubería con características
+ * específicas (material, diámetro, categoría). Esta información es relevante
+ * para cálculos hidráulicos y gestión de activos.
+ */
+export interface ICaracteristicasTuberia {
+  /**
+   * Categoría jerárquica (Principal/Ramal/Conexión)
+   * Refleja la posición en la jerarquía de la red
+   */
+  categoria: CategoriaTuberia;
+
+  /**
+   * Material de construcción
+   * Crítico para cálculos hidráulicos (rugosidad, pérdidas de carga)
+   */
+  material: MaterialTuberia;
+
+  /**
+   * Diámetro nominal en milímetros (ej: 400, 200, 100, 25)
+   */
+  diametroNominal: number;
+
+  /**
+   * Diámetro interno real en milímetros
+   * Usado en cálculos hidráulicos (puede ser menor que nominal debido a espesor)
+   */
+  diametroInterno: number;
+
+  /**
+   * Presión nominal de trabajo en bar
+   * Presión máxima de diseño de la tubería
+   */
+  presionNominalTrabajo?: number;
+
+  /**
+   * Año de instalación de esta tubería
+   * Útil para gestión de activos y estimación de vida útil restante
+   */
+  anoInstalacion?: number;
+
+  /**
+   * Estado de conservación actual
+   * Importante para planificación de mantenimiento y renovación
+   */
+  estadoConservacion?: EstadoConservacion;
+
+  /**
+   * Función especial (si aplica)
+   * Ej: impulsión, interconexión, bypass
+   */
+  funcionEspecial?: FuncionEspecialTuberia;
+
+  /**
+   * Coeficiente de rugosidad de Hazen-Williams
+   * Usado en cálculos de pérdida de carga
+   * Si no se especifica, se usa valor por defecto según material y antigüedad
+   */
+  coeficienteHazenWilliams?: number;
+
+  /**
+   * Observaciones técnicas o de campo
+   */
+  observaciones?: string;
+}
+
+// ==========================================
 // CONFIGURACIONES EMBEBIDAS
 // ==========================================
 
@@ -285,6 +401,20 @@ export interface IPuntoMedicion {
 
   // Ubicación
   ubicacion: IUbicacionGeografica; // Coordenadas y referencias espaciales
+
+  // ⭐ CARACTERÍSTICAS DE TUBERÍA (donde está instalado el punto)
+  /**
+   * Características de la tubería donde está instalado este punto de medición
+   *
+   * Información relevante para:
+   * - Cálculos hidráulicos (material, diámetro → pérdidas de carga)
+   * - Gestión de activos (antigüedad, estado → planificación mantenimiento)
+   * - Contexto operacional (categoría → jerarquía en red)
+   *
+   * OPCIONAL: Solo se llena si el punto está instalado en tubería de red
+   * (no aplica para puntos sin tubería como estaciones climáticas)
+   */
+  tuberia?: ICaracteristicasTuberia;
 
   // Estado y fechas
   estado: EstadoPuntoMedicion;     // Estado operacional

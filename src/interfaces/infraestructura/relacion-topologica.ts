@@ -45,10 +45,9 @@ export interface IRelacionTopologica {
   idPuntoDestino: string; // "Hacia" (downstream)
   tipoRelacion: TipoRelacionTopologica;
 
-  // Características técnicas de la relación
+  // Características de conectividad
   capacidadNominal?: number; // m³/h que puede transferir esta conexión
-  distanciaAproximada?: number; // metros de tubería entre puntos
-  diametroTuberia?: number;  // mm de diámetro (si aplica)
+  distanciaAproximada?: number; // metros aproximados entre puntos (para cálculos)
 
   // Prioridad en caso de múltiples relaciones
   prioridad?: number; // 1 = principal, 2 = secundario, etc.
