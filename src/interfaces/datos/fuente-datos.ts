@@ -1,10 +1,12 @@
+import { SistemaExternoConocido } from './sistema-externo';
 
 /**
  * Tipo de fuente de datos externa
  */
 export type TipoFuenteDatos =
   | 'scada'              // Sistema SCADA (Zeus, iFIX, etc.)
-  | 'gestion_comercial'  // Sistema de gestión comercial (ATLAS)
+  | 'telemetria'         // Sistema de telemetría (ATLAS)
+  | 'gestion_comercial'  // Sistema de gestión comercial
   | 'gis'                // Sistema de información geográfica
   | 'sensor_iot'         // Sensores IoT directos
   | 'clima'              // Servicio meteorológico (Visual Crossing, INUMET, etc.)
@@ -22,23 +24,24 @@ export type EstadoFuenteDatos =
   | 'desactivada';  // Eliminada permanentemente
 
 /**
- * Fuente de Datos - Sistema externo de origen
+ * Fuente de Datos - Instancia de sistema externo
  *
- * Representa un sistema externo que provee datos al sistema RIOTEC.
+ * Representa una INSTANCIA específica de un sistema externo que provee datos.
  *
  * Ejemplos:
- * - ATLAS Maldonado (gestión comercial)
- * - Zeus SCADA (infraestructura)
- * - ArcGIS (geoespacial)
+ * - "Zeus UGD Maldonado" → sistemaExterno: 'zeus-scada', tipo: 'scada'
+ * - "Zeus UGD Colonia" → sistemaExterno: 'zeus-scada', tipo: 'scada'
+ * - "ATLAS Maldonado" → sistemaExterno: 'atlas-telemetria', tipo: 'telemetria'
  */
 export interface IFuenteDatos {
   _id?: string;
   idCliente: string;               // Referencia a Cliente
 
   // Identificación
-  nombre: string;                  // ej: "ATLAS Maldonado"
+  nombre: string;                  // ej: "Zeus UGD Maldonado"
   codigo?: string;                 // Código interno único
   tipo: TipoFuenteDatos;           // Tipo de fuente
+  sistemaExterno?: SistemaExternoConocido; // Sistema externo específico (opcional)
 
   // Configuración de conexión
   configuracion?: {
