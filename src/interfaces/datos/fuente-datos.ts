@@ -1,19 +1,6 @@
 import { SistemaExternoConocido } from './sistema-externo';
 
 /**
- * Tipo de fuente de datos externa
- */
-export type TipoFuenteDatos =
-  | 'scada'              // Sistema SCADA (Zeus, iFIX, etc.)
-  | 'telemetria'         // Sistema de telemetría (ATLAS)
-  | 'gestion_comercial'  // Sistema de gestión comercial
-  | 'gis'                // Sistema de información geográfica
-  | 'sensor_iot'         // Sensores IoT directos
-  | 'clima'              // Servicio meteorológico (Visual Crossing, INUMET, etc.)
-  | 'manual'             // Carga manual
-  | 'otro';              // Otros sistemas
-
-/**
  * Estado de la fuente de datos
  */
 export type EstadoFuenteDatos =
@@ -27,11 +14,12 @@ export type EstadoFuenteDatos =
  * Fuente de Datos - Instancia de sistema externo
  *
  * Representa una INSTANCIA específica de un sistema externo que provee datos.
+ * La forma de interactuar con el sistema externo está dada por la implementación del conector específico.
  *
  * Ejemplos:
- * - "Zeus UGD Maldonado" → sistemaExterno: 'zeus-scada', tipo: 'scada'
- * - "Zeus UGD Colonia" → sistemaExterno: 'zeus-scada', tipo: 'scada'
- * - "ATLAS Maldonado" → sistemaExterno: 'atlas-telemetria', tipo: 'telemetria'
+ * - "Zeus UGD Maldonado" → sistemaExterno: 'zeus-scada'
+ * - "Zeus UGD Colonia" → sistemaExterno: 'zeus-scada'
+ * - "ATLAS Maldonado" → sistemaExterno: 'atlas-telemetria'
  */
 export interface IFuenteDatos {
   _id?: string;
@@ -40,8 +28,7 @@ export interface IFuenteDatos {
   // Identificación
   nombre: string;                  // ej: "Zeus UGD Maldonado"
   codigo?: string;                 // Código interno único
-  tipo: TipoFuenteDatos;           // Tipo de fuente
-  sistemaExterno?: SistemaExternoConocido; // Sistema externo específico (opcional)
+  sistemaExterno: SistemaExternoConocido; // Sistema externo (requerido)
 
   // Configuración de conexión
   configuracion?: {
@@ -82,7 +69,7 @@ export interface ICreateFuenteDatos extends Omit<
 > {
   idCliente: string;    // Requerido
   nombre: string;       // Requerido
-  tipo: TipoFuenteDatos; // Requerido
+  sistemaExterno: SistemaExternoConocido; // Requerido
   estado: EstadoFuenteDatos; // Requerido
 }
 
